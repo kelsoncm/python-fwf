@@ -25,41 +25,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
 
-from typing import Dict, List
-
-
-class ColumnDescriptor(object):
-
-    def __init__(self, _name: str, start: int, size: int, _type: str=str, validations: List=[], description: str=None):
-        super(ColumnDescriptor, self).__init__()
-        assert isinstance(_name, str), 'O campo name deve ser uma string'
-        assert _name and _name.rstrip(), 'O campo column_name deve ser uma string válida e não branca'
-        assert isinstance(start, int), 'O campo start deve ser um inteiro'
-        assert start > 0, 'O campo start deve ser maior que 0'
-        assert isinstance(size, int), 'O campo size deve ser um inteiro'
-        assert size > 0, 'O campo size deve ser maior que 0'
-        assert isinstance(_type, type), 'O campo type deve ser uma classe'
-        assert isinstance(validations, list), 'O campo validations deve ser uma List'
-        if description is None:
-            description = _name
-        else:
-            assert isinstance(description, str), 'O campo description deve ser uma string'
-
-        self.name = _name
-        self.start = start
-        self.size = size
-        self.type = _type
-        self.validations = validations
-        self.description = description
-
-    @property
-    def end(self):
-        return self.start + self.size - 1
+from typing import List
+from datetime import datetime, date
+from .columns import AbstractColumn
 
 
 class RowDescriptor(object):
 
-    def __init__(self, columns: List[ColumnDescriptor]):
+    def __init__(self, columns: List[AbstractColumn]):
         super(RowDescriptor, self).__init__()
         assert isinstance(columns, list), 'columns deve ser uma List'
         assert columns != [], 'columns deve ter ao menos 1 elemento'
