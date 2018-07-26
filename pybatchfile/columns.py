@@ -27,6 +27,7 @@ __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
 from typing import List
 from datetime import datetime, date, time
+import re
 
 
 class AbstractColumn(object):
@@ -104,7 +105,7 @@ class PositiveIntegerColumn(AbstractColumn):
     def to_value(self, slice: str):
         _value = int(super(PositiveIntegerColumn, self).to_value(slice))
         assert _value >= 0, \
-            "Informe uma string para converter corretamente, '%s' não é um 'inteiro positivo'" % slice
+            "Informe uma string para converter corretamente, '%s' não é um '%s'" % (slice, self.to_str_assertion_types)
         return _value
 
 
@@ -114,13 +115,16 @@ class PositiveDecimalColumn(PositiveIntegerColumn):
 
     def __init__(self, _name: str, start: int, size: int,  decimals: int=2, description: str=None):
         super(PositiveDecimalColumn, self).__init__(_name, start, size, description)
+        assert isinstance(decimals, int), 'Os decimais devem ser um inteiro'
+        assert decimals > 0, 'Os decimais devem ser maior que 0'
+        assert size > decimals, 'Os decimais devem ser menores que o size'
         self.decimals = decimals
 
     def to_value(self, slice: str):
         return super(PositiveDecimalColumn, self).to_value(slice) / pow(10, self.decimals)
 
     def to_str_assertion(self, value):
-        return isinstance(value, float) and not isinstance(value, bool) and int(value * pow(10, self.size)) >= 0
+        return isinstance(value, float) and not isinstance(value, bool) and value >= 0.0
 
     def to_str(self, value: str):
         assert value is None or self.to_str_assertion(value), \
@@ -129,7 +133,7 @@ class PositiveDecimalColumn(PositiveIntegerColumn):
         if value is None:
             return self.to_str_none_pad * self.size
         else:
-            _value = int(value * pow(10, self.size))
+            _value = int(value * pow(10, self.decimals))
             return self._validate_to_str_size((self.to_str_pad_template % self.size).format(_value))
 
 
@@ -137,12 +141,23 @@ class DateTimeColumn(AbstractColumn):
     to_str_assertion_types = 'datetime'
     to_str_assertion_class = datetime
     to_str_none_pad = '0'
+    format_num_elements = 5
 
     def __init__(self, _name: str, start: int, _format: str='%d%m%Y%H%M', description: str=None):
+        assert isinstance(_name, str), \
+            'O campo name deve ser uma string'
+        assert _name and _name.strip(), \
+            'O campo column_name deve ser uma string válida e não branca'
         assert isinstance(_format, str), \
-            "O argumento 'format' do campo '%s' deve ser uma string" % _name
+            "O argumento '_format' do campo '%s' deve ser uma string" % _name
+        assert _format and _format.strip(), \
+            "O argumento '_format' do campo '%s' deve ser uma string válida e não branca" % _name
+        assert len([x for x in re.finditer(re.compile('(%[a-z,A-Z])'), _format)]) == self.format_num_elements, \
+            "O argumento '_format' (%s) do campo '%s' deve ter um formato de data/hora válido" % (_format, _name)
+
         _size = len(datetime(2001, 12, 31, 13, 59).strftime(_format))
 
+        self.to_str_pad_templating = ''
         super(DateTimeColumn, self).__init__(_name, start, _size, description)
 
         self.format = _format
@@ -152,19 +167,26 @@ class DateTimeColumn(AbstractColumn):
         try:
             return datetime.strptime(_value, self.format)
         except ValueError:
-            raise ValueError("O valor '%s' do campo '%s' não é um valor no formato '%s'" %
+            raise ValueError("O valor '%s' do campo '%s' é inválido para o formato '%s'" %
                              (_value, self.name, self.format))
 
-    def to_str(self, value: date):
-        return super(DateTimeColumn, self).to_str(value or value.strftim(self.format))
+    def to_str(self, value: datetime):
+        assert value is None or self.to_str_assertion(value), \
+            "O campo '%s' só aceita '%s' or 'None'" % (self.name, self.to_str_assertion_types)
+
+        if value is None:
+            return self.to_str_none_pad * self.size
+        else:
+            return self._validate_to_str_size(value.strftime(self.format))
 
 
 class DateColumn(DateTimeColumn):
     to_str_assertion_types = 'date'
     to_str_assertion_class = date
+    format_num_elements = 3
 
     def __init__(self, _name: str, start: int, _format: str='%d%m%Y', description: str=None):
-        super(CharColumn, self).__init__(_name, start, _format, description)
+        super(DateColumn, self).__init__(_name, start, _format, description)
 
     def to_value(self, slice: str):
         return super(DateColumn, self).to_value(slice).date()
@@ -173,8 +195,9 @@ class DateColumn(DateTimeColumn):
 class TimeColumn(DateTimeColumn):
     to_str_assertion_types = 'time'
     to_str_assertion_class = time
+    format_num_elements = 2
 
-    def __init__(self, _name: str, start: int, _format: str='%%H%M', description: str=None):
+    def __init__(self, _name: str, start: int, _format: str='%H%M', description: str=None):
         super(TimeColumn, self).__init__(_name, start, _format, description)
 
     def to_value(self, slice: str):
