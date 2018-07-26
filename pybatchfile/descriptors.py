@@ -25,9 +25,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
 
-from typing import List
-from datetime import datetime, date
+from typing import List, Dict
 from .columns import AbstractColumn
+
+
+def full_class_name(o):
+    return o.__module__ + "." + o.__class__.__qualname__
 
 
 class RowDescriptor(object):
@@ -37,6 +40,10 @@ class RowDescriptor(object):
         assert isinstance(columns, list), 'columns deve ser uma List'
         assert columns != [], 'columns deve ter ao menos 1 elemento'
         self.columns = columns
+        last = None
+        for column in columns:
+            column.start = last.end + 1 if last is not None else 1
+            last = column
         self.validate_positions()
 
     @property
@@ -53,6 +60,9 @@ class RowDescriptor(object):
                                                   'a coluna %s (ends in %d)' % \
                                                   (col.name, col.start, prev.name, prev.end)
             prev = col
+
+    def dehydrate(self):
+        return [{'type': full_class_name(col), 'attributes': col.dehydrate()} for col in self.columns]
 
 
 class HeaderRowDescriptor(RowDescriptor):
@@ -74,27 +84,41 @@ class FileDescriptor(object):
                  footer: FooterRowDescriptor=None):
         super(FileDescriptor, self).__init__()
 
-        assert isinstance(details, list), 'details_descriptors deve ser uma List'
-        assert len(details) > 0, 'details_descriptors deve ser uma List com ao menos 1 DetailRowDescriptor'
+        assert isinstance(details, list), \
+            'details deve ser uma List'
+        assert len(details) > 0, \
+            'details deve ser uma List com ao menos 1 DetailRowDescriptor'
         for detail in details:
-            assert isinstance(detail, DetailRowDescriptor), 'details_descriptors deve ser uma List de ' \
-                                                            'DetailRowDescriptor'
+            assert isinstance(detail, DetailRowDescriptor), \
+                'details deve ser uma List de DetailRowDescriptor'
         assert isinstance(header, HeaderRowDescriptor) or header is None, \
-            'header_descriptor deve ser um HeaderRowDescriptor'
+            'header deve ser um HeaderRowDescriptor'
         assert isinstance(footer, FooterRowDescriptor) or footer is None, \
             'footer_descriptor deve ser um FooterRowDescriptor'
 
-        self.header_descriptor = header
-        self.footer_descriptor = footer
-        self.details_descriptors = details
-        self.validate_positions()
-        self._line_size = self.details_descriptors[0].line_size
+        self.header = header
+        self.footer = footer
+        self.details = details
+        self.validate_sizes()
+        self._line_size = self.details[0].line_size
 
-    def validate_positions(self):
-        h = self.header_descriptor.line_size if self.header_descriptor else 0
-        f = self.footer_descriptor.line_size if self.header_descriptor else 0
-        d = self.details_descriptors[0].line_size
-        ln = [x.line_size for x in self.details_descriptors]
+    def validate_sizes(self):
+        h = self.header.line_size if self.header else 0
+        f = self.footer.line_size if self.header else 0
+        d = self.details[0].line_size
+        ln = [x.line_size for x in self.details]
         s = sum(ln)
-        assert (s == d * len(self.details_descriptors)) and (d == h or h == 0) and (d == f or f == 0), \
+        assert (s == d * len(self.details)) and (d == h or h == 0) and (d == f or f == 0), \
             'O tamanho das linhas header (%d), footer (%d) e das details (%s) devem ser iguais' % (h, f, ln)
+
+    def dehydrate(self):
+        return {
+            'details': [detail.dehydrate() for detail in self.details],
+            'header': self.header.dehydrate(),
+            'footer': self.footer.dehydrate()
+        }
+
+    # @staticmethod
+    # def hydrate(representation: Dict):
+    #     assert isinstance(representation, Dict), 'representation deve ser um Dict'
+    #     assert 'details' in representation, 'representation deve ser um Dict'

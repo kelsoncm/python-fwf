@@ -25,19 +25,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
 
-from typing import List
 from datetime import datetime, date, time
 import re
 
 
 class AbstractColumn(object):
+    to_str_assertion_types = None
+    to_str_assertion_class = None
+    to_str_none_pad = None
+    to_str_pad_template = None
+    to_hydrating = ['name', 'size', 'description']
 
-    def __init__(self, _name: str, start: int, size: int, description: str=None):
+    def __init__(self, _name: str, size: int, description: str=None):
         super(AbstractColumn, self).__init__()
         assert isinstance(_name, str), 'O campo name deve ser uma string'
         assert _name and _name.rstrip(), 'O campo column_name deve ser uma string válida e não branca'
-        assert isinstance(start, int), 'O campo start deve ser um inteiro'
-        assert start > 0, 'O campo start deve ser maior que 0'
         assert isinstance(size, int), 'O campo size deve ser um inteiro'
         assert size > 0, 'O campo size deve ser maior que 0'
         if description is None:
@@ -46,12 +48,14 @@ class AbstractColumn(object):
             assert isinstance(description, str), 'O campo description deve ser uma string'
 
         self.name = _name
-        self.start = start
         self.size = size
         self.description = description
+        self.start = None
 
     @property
     def end(self):
+        assert isinstance(self.start, int), 'O campo start deve ser um inteiro'
+        assert self.start > 0, 'O campo start deve ser maior que 0'
         return self.start + self.size - 1
 
     def to_value(self, slice):
@@ -76,6 +80,9 @@ class AbstractColumn(object):
             return self.to_str_none_pad * self.size
         else:
             return self._validate_to_str_size((self.to_str_pad_template % self.size).format(value))
+
+    def dehydrate(self):
+        return dict([(name, getattr(self, name)) for name in self.to_hydrating])
 
 
 class CharColumn(AbstractColumn):
@@ -112,9 +119,10 @@ class PositiveIntegerColumn(AbstractColumn):
 class PositiveDecimalColumn(PositiveIntegerColumn):
     to_str_assertion_types = 'positive decimal'
     to_str_assertion_class = float
+    to_hydrating = ['name', 'size', 'decimals', 'description']
 
-    def __init__(self, _name: str, start: int, size: int,  decimals: int=2, description: str=None):
-        super(PositiveDecimalColumn, self).__init__(_name, start, size, description)
+    def __init__(self, _name: str, size: int,  decimals: int=2, description: str=None):
+        super(PositiveDecimalColumn, self).__init__(_name, size, description)
         assert isinstance(decimals, int), 'Os decimais devem ser um inteiro'
         assert decimals > 0, 'Os decimais devem ser maior que 0'
         assert size > decimals, 'Os decimais devem ser menores que o size'
@@ -142,8 +150,9 @@ class DateTimeColumn(AbstractColumn):
     to_str_assertion_class = datetime
     to_str_none_pad = '0'
     format_num_elements = 5
+    to_hydrating = ['name', 'format', 'description']
 
-    def __init__(self, _name: str, start: int, _format: str='%d%m%Y%H%M', description: str=None):
+    def __init__(self, _name: str, _format: str='%d%m%Y%H%M', description: str=None):
         assert isinstance(_name, str), \
             'O campo name deve ser uma string'
         assert _name and _name.strip(), \
@@ -158,7 +167,7 @@ class DateTimeColumn(AbstractColumn):
         _size = len(datetime(2001, 12, 31, 13, 59).strftime(_format))
 
         self.to_str_pad_templating = ''
-        super(DateTimeColumn, self).__init__(_name, start, _size, description)
+        super(DateTimeColumn, self).__init__(_name, _size, description)
 
         self.format = _format
 
@@ -185,8 +194,8 @@ class DateColumn(DateTimeColumn):
     to_str_assertion_class = date
     format_num_elements = 3
 
-    def __init__(self, _name: str, start: int, _format: str='%d%m%Y', description: str=None):
-        super(DateColumn, self).__init__(_name, start, _format, description)
+    def __init__(self, _name: str, _format: str='%d%m%Y', description: str=None):
+        super(DateColumn, self).__init__(_name, _format, description)
 
     def to_value(self, slice: str):
         return super(DateColumn, self).to_value(slice).date()
@@ -197,8 +206,8 @@ class TimeColumn(DateTimeColumn):
     to_str_assertion_class = time
     format_num_elements = 2
 
-    def __init__(self, _name: str, start: int, _format: str='%H%M', description: str=None):
-        super(TimeColumn, self).__init__(_name, start, _format, description)
+    def __init__(self, _name: str, _format: str='%H%M', description: str=None):
+        super(TimeColumn, self).__init__(_name, _format, description)
 
     def to_value(self, slice: str):
         return super(TimeColumn, self).to_value(slice).time()
