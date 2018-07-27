@@ -406,6 +406,7 @@ class TestDateTimeColumn(TestCase):
 
     def test_to_str_valid(self):
         self.assertEqual("280220012359", DateTimeColumn("dt").to_str(datetime(2001, 2, 28, 23, 59)))
+        self.assertEqual("000000000000", DateTimeColumn("dt").to_str(None))
         self.assertEqual("2802012359", DateTimeColumn("dt", '%d%m%y%H%M').to_str(datetime(2001, 2, 28, 23, 59)))
 
     def test_dehydrate(self):
