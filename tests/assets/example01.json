@@ -1,131 +1,134 @@
 {
+  "type": "pybatchfile.descriptors.FileDescriptor",
+  "args": {
     "details": [
-        [
-            {
-                "type": "pybatchfile.columns.CharColumn",
-                "attributes": {
-                    "name": "row_type",
-                    "size": 1,
-                    "description": "row_type"
-                }
-            },
-            {
-                "type": "pybatchfile.columns.CharColumn",
-                "attributes": {
-                    "name": "name",
-                    "size": 60,
-                    "description": "name"
-                }
-            },
-            {
-                "type": "pybatchfile.columns.RightCharColumn",
-                "attributes": {
-                    "name": "right_name",
-                    "size": 60,
-                    "description": "right_name"
-                }
-            },
-            {
-                "type": "pybatchfile.columns.PositiveIntegerColumn",
-                "attributes": {
-                    "name": "positive_interger",
-                    "size": 9,
-                    "description": "positive_interger"
-                }
-            },
-            {
-                "type": "pybatchfile.columns.PositiveDecimalColumn",
-                "attributes": {
-                    "name": "positive_decimal",
-                    "size": 9,
-                    "decimals": 2,
-                    "description": "positive_decimal"
-                }
-            },
-            {
-                "type": "pybatchfile.columns.DateTimeColumn",
-                "attributes": {
-                    "name": "datetime",
-                    "format": "%d%m%Y%H%M",
-                    "description": "datetime"
-                }
-            },
-            {
-                "type": "pybatchfile.columns.DateColumn",
-                "attributes": {
-                    "name": "date",
-                    "format": "%d%m%Y",
-                    "description": "date"
-                }
-            },
-            {
-                "type": "pybatchfile.columns.TimeColumn",
-                "attributes": {
-                    "name": "time",
-                    "format": "%H%M",
-                    "description": "time"
-                }
-            }
-        ]
+      [
+        {
+          "type": "pybatchfile.columns.CharColumn",
+          "args": {
+            "name": "row_type",
+            "size": 1,
+            "description": "row_type"
+          }
+        },
+        {
+          "type": "pybatchfile.columns.CharColumn",
+          "args": {
+            "name": "name",
+            "size": 60,
+            "description": "name"
+          }
+        },
+        {
+          "type": "pybatchfile.columns.RightCharColumn",
+          "args": {
+            "name": "right_name",
+            "size": 60,
+            "description": "right_name"
+          }
+        },
+        {
+          "type": "pybatchfile.columns.PositiveIntegerColumn",
+          "args": {
+            "name": "positive_interger",
+            "size": 9,
+            "description": "positive_interger"
+          }
+        },
+        {
+          "type": "pybatchfile.columns.PositiveDecimalColumn",
+          "args": {
+            "name": "positive_decimal",
+            "size": 9,
+            "decimals": 2,
+            "description": "positive_decimal"
+          }
+        },
+        {
+          "type": "pybatchfile.columns.DateTimeColumn",
+          "args": {
+            "name": "datetime",
+            "format": "%d%m%Y%H%M",
+            "description": "datetime"
+          }
+        },
+        {
+          "type": "pybatchfile.columns.DateColumn",
+          "args": {
+            "name": "date",
+            "format": "%d%m%Y",
+            "description": "date"
+          }
+        },
+        {
+          "type": "pybatchfile.columns.TimeColumn",
+          "args": {
+            "name": "time",
+            "format": "%H%M",
+            "description": "time"
+          }
+        }
+      ]
     ],
     "header": [
-        {
-            "type": "pybatchfile.columns.CharColumn",
-            "attributes": {
-                "name": "row_type",
-                "size": 1,
-                "description": "row_type"
-            }
-        },
-        {
-            "type": "pybatchfile.columns.CharColumn",
-            "attributes": {
-                "name": "filetype",
-                "size": 5,
-                "description": "filetype"
-            }
-        },
-        {
-            "type": "pybatchfile.columns.CharColumn",
-            "attributes": {
-                "name": "fill",
-                "size": 157,
-                "description": "fill"
-            }
+      {
+        "type": "pybatchfile.columns.CharColumn",
+        "args": {
+          "name": "row_type",
+          "size": 1,
+          "description": "row_type"
         }
+      },
+      {
+        "type": "pybatchfile.columns.CharColumn",
+        "args": {
+          "name": "filetype",
+          "size": 5,
+          "description": "filetype"
+        }
+      },
+      {
+        "type": "pybatchfile.columns.CharColumn",
+        "args": {
+          "name": "fill",
+          "size": 157,
+          "description": "fill"
+        }
+      }
     ],
     "footer": [
-        {
-            "type": "pybatchfile.columns.CharColumn",
-            "attributes": {
-                "name": "row_type",
-                "size": 1,
-                "description": "row_type"
-            }
-        },
-        {
-            "type": "pybatchfile.columns.PositiveIntegerColumn",
-            "attributes": {
-                "name": "detail_count",
-                "size": 4,
-                "description": "detail_count"
-            }
-        },
-        {
-            "type": "pybatchfile.columns.PositiveIntegerColumn",
-            "attributes": {
-                "name": "row_count",
-                "size": 4,
-                "description": "row_count"
-            }
-        },
-        {
-            "type": "pybatchfile.columns.CharColumn",
-            "attributes": {
-                "name": "fill",
-                "size": 154,
-                "description": "fill"
-            }
+      {
+        "type": "pybatchfile.columns.CharColumn",
+        "args": {
+          "name": "row_type",
+          "size": 1,
+          "description": "row_type"
         }
+      },
+      {
+        "type": "pybatchfile.columns.PositiveIntegerColumn",
+        "args": {
+          "name": "detail_count",
+          "size": 4,
+          "description": "detail_count"
+        }
+      },
+      {
+        "type": "pybatchfile.columns.PositiveIntegerColumn",
+        "args": {
+          "name": "row_count",
+          "size": 4,
+          "description": "row_count"
+        }
+      },
+      {
+        "type": "pybatchfile.columns.CharColumn",
+        "args": {
+          "name": "fill",
+          "size": 154,
+          "description": "fill"
+        }
+      }
     ]
+  }
 }

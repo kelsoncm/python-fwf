@@ -28,7 +28,8 @@ from unittest import TestCase
 from pybatchfile.columns import CharColumn, RightCharColumn, PositiveIntegerColumn, PositiveDecimalColumn, \
     DateTimeColumn, DateColumn, TimeColumn
 from pybatchfile.descriptors import RowDescriptor, HeaderRowDescriptor, \
-    FooterRowDescriptor, DetailRowDescriptor, FileDescriptor, render_as_markdown
+    FooterRowDescriptor, DetailRowDescriptor, FileDescriptor
+from pybatchfile.renders import render_as_markdown
 
 
 class TestRowDescriptor(TestCase):
@@ -52,42 +53,42 @@ class TestRowDescriptor(TestCase):
         self.assertRaisesRegex(AssertionError, 'columns.*1.*', RowDescriptor, [])
         self.assertRaisesRegex(AssertionError, 'columns.*List', RowDescriptor, 1)
 
-    def test_dehydrate(self):
-        self.assertListEqual(
-            [{'type': 'pybatchfile.columns.CharColumn',
-              'attributes': {'name': 'a_char', 'size': 1, 'description': 'a_char'}}],
-            RowDescriptor([CharColumn("a_char", 1), ]).dehydrate()
-        )
-        self.assertListEqual(
-            [{'type': 'pybatchfile.columns.RightCharColumn',
-              'attributes': {'name': 'a_rchar', 'size': 10, 'description': 'a_rchar'}}],
-            RowDescriptor([RightCharColumn("a_rchar", 10)]).dehydrate()
-        )
-        self.assertListEqual(
-            [{'type': 'pybatchfile.columns.PositiveIntegerColumn',
-              'attributes': {'name': 'a_int', 'size': 20, 'description': 'a_int'}}],
-            RowDescriptor([PositiveIntegerColumn("a_int", 20)]).dehydrate()
-        )
-        self.assertListEqual(
-            [{'type': 'pybatchfile.columns.PositiveDecimalColumn',
-              'attributes': {'name': 'a_float', 'size': 30, 'decimals': 2, 'description': 'a_float'}}],
-            RowDescriptor([PositiveDecimalColumn("a_float", 30)]).dehydrate()
-        )
-        self.assertListEqual(
-            [{'type': 'pybatchfile.columns.DateTimeColumn',
-              'attributes': {'name': 'a_datetime', 'format': '%d%m%Y%H%M', 'description': 'a_datetime'}}],
-            RowDescriptor([DateTimeColumn("a_datetime")]).dehydrate()
-        )
-        self.assertListEqual(
-            [{'type': 'pybatchfile.columns.DateColumn',
-              'attributes': {'name': 'a_date', 'format': '%d%m%Y', 'description': 'a_date'}}],
-            RowDescriptor([DateColumn("a_date")]).dehydrate()
-        )
-        self.assertListEqual(
-            [{'type': 'pybatchfile.columns.TimeColumn',
-              'attributes': {'name': 'a_time', 'format': '%H%M', 'description': 'a_time'}}],
-            RowDescriptor([TimeColumn("a_time")]).dehydrate()
-        )
+    # def test_dehydrate(self):
+    #     self.assertListEqual(
+    #         [{'type': 'pybatchfile.columns.CharColumn',
+    #           'attributes': {'name': 'a_char', 'size': 1, 'description': 'a_char'}}],
+    #         RowDescriptor([CharColumn("a_char", 1), ]).dehydrate()
+    #     )
+    #     self.assertListEqual(
+    #         [{'type': 'pybatchfile.columns.RightCharColumn',
+    #           'attributes': {'name': 'a_rchar', 'size': 10, 'description': 'a_rchar'}}],
+    #         RowDescriptor([RightCharColumn("a_rchar", 10)]).dehydrate()
+    #     )
+    #     self.assertListEqual(
+    #         [{'type': 'pybatchfile.columns.PositiveIntegerColumn',
+    #           'attributes': {'name': 'a_int', 'size': 20, 'description': 'a_int'}}],
+    #         RowDescriptor([PositiveIntegerColumn("a_int", 20)]).dehydrate()
+    #     )
+    #     self.assertListEqual(
+    #         [{'type': 'pybatchfile.columns.PositiveDecimalColumn',
+    #           'attributes': {'name': 'a_float', 'size': 30, 'decimals': 2, 'description': 'a_float'}}],
+    #         RowDescriptor([PositiveDecimalColumn("a_float", 30)]).dehydrate()
+    #     )
+    #     self.assertListEqual(
+    #         [{'type': 'pybatchfile.columns.DateTimeColumn',
+    #           'attributes': {'name': 'a_datetime', 'format': '%d%m%Y%H%M', 'description': 'a_datetime'}}],
+    #         RowDescriptor([DateTimeColumn("a_datetime")]).dehydrate()
+    #     )
+    #     self.assertListEqual(
+    #         [{'type': 'pybatchfile.columns.DateColumn',
+    #           'attributes': {'name': 'a_date', 'format': '%d%m%Y', 'description': 'a_date'}}],
+    #         RowDescriptor([DateColumn("a_date")]).dehydrate()
+    #     )
+    #     self.assertListEqual(
+    #         [{'type': 'pybatchfile.columns.TimeColumn',
+    #           'attributes': {'name': 'a_time', 'format': '%H%M', 'description': 'a_time'}}],
+    #         RowDescriptor([TimeColumn("a_time")]).dehydrate()
+    #     )
 
 
 class TestHeaderRowDescriptor(TestCase):
@@ -216,16 +217,12 @@ class TestFileDescriptor(TestCase):
         t = CharColumn("type", 1)
         self.assertRaisesRegex(AssertionError, 'header \(1\).*footer \(2\).*details \(\[1\]\)')
 
-    def test_dehydrate(self):
-        self.assertDictEqual(json.loads(self.example01_json), self.file_descriptor.dehydrate())
+    # def test_dehydrate(self):
+    #     self.assertDictEqual(json.loads(self.example01_json), self.file_descriptor.dehydrate())
 
     # def test_hydrate(self):
-    #     self.fail()
+    #     FileDescriptor.hydrate(json.loads(self.example01_json))
 
-    def test_render_as_markdown(self):
-        with io.StringIO() as buf:
-            render_as_markdown(self.file_descriptor, buf)
-            self.assertEqual(self.example01_markdown, buf.getvalue())
 
     # def test_file_format_validate(self):
     #     fd = FileDescriptor(
@@ -255,3 +252,42 @@ class TestFileDescriptor(TestCase):
     #     )
     #
     #
+
+
+class TestRenders(TestCase):
+
+    def setUp(self):
+        self.file_descriptor = FileDescriptor(
+            [
+                DetailRowDescriptor([
+                    CharColumn('row_type', 1),
+                    CharColumn('name', 60),
+                    RightCharColumn('right_name', 60),
+                    PositiveIntegerColumn('positive_interger', 9),
+                    PositiveDecimalColumn('positive_decimal', 9),
+                    DateTimeColumn('datetime'),
+                    DateColumn('date'),
+                    TimeColumn('time'),
+                ])
+            ],
+            HeaderRowDescriptor([
+                CharColumn('row_type', 1),
+                CharColumn('filetype', 5),
+                CharColumn('fill', 157),
+            ]),
+            FooterRowDescriptor([
+                CharColumn('row_type', 1),
+                PositiveIntegerColumn('detail_count', 4),
+                PositiveIntegerColumn('row_count', 4),
+                CharColumn('fill', 154),
+            ]),
+        )
+        with open('assets/example01.json') as f:
+            self.example01_json = f.read()
+        with open('assets/example01.md') as f:
+            self.example01_markdown = f.read()
+
+    def test_render_as_markdown(self):
+        with io.StringIO() as buf:
+            render_as_markdown(self.file_descriptor, buf)
+            self.assertEqual(self.example01_markdown, buf.getvalue())

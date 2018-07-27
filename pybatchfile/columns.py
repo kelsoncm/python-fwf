@@ -174,7 +174,10 @@ class DateTimeColumn(AbstractColumn):
     def to_value(self, slice: str):
         _value = super(DateTimeColumn, self).to_value(slice)
         try:
-            return datetime.strptime(_value, self.format)
+            if _value == self.to_str_none_pad * self.size:
+                return None
+            else:
+                return datetime.strptime(_value, self.format)
         except ValueError:
             raise ValueError("O valor '%s' do campo '%s' é inválido para o formato '%s'" %
                              (_value, self.name, self.format))
@@ -198,7 +201,8 @@ class DateColumn(DateTimeColumn):
         super(DateColumn, self).__init__(_name, _format, description)
 
     def to_value(self, slice: str):
-        return super(DateColumn, self).to_value(slice).date()
+        result = super(DateColumn, self).to_value(slice)
+        return result.date() if result is not None else None
 
 
 class TimeColumn(DateTimeColumn):
@@ -210,4 +214,5 @@ class TimeColumn(DateTimeColumn):
         super(TimeColumn, self).__init__(_name, _format, description)
 
     def to_value(self, slice: str):
-        return super(TimeColumn, self).to_value(slice).time()
+        result = super(TimeColumn, self).to_value(slice)
+        return result.time() if result is not None else None
