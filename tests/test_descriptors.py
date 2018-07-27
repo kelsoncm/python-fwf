@@ -23,11 +23,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
+import json, io
 from unittest import TestCase
 from pybatchfile.columns import CharColumn, RightCharColumn, PositiveIntegerColumn, PositiveDecimalColumn, \
     DateTimeColumn, DateColumn, TimeColumn
 from pybatchfile.descriptors import RowDescriptor, HeaderRowDescriptor, \
-    FooterRowDescriptor, DetailRowDescriptor, FileDescriptor
+    FooterRowDescriptor, DetailRowDescriptor, FileDescriptor, render_as_markdown
 
 
 class TestRowDescriptor(TestCase):
@@ -175,6 +176,10 @@ class TestFileDescriptor(TestCase):
                 CharColumn('fill', 154),
             ]),
         )
+        with open('assets/example01.json') as f:
+            self.example01_json = f.read()
+        with open('assets/example01.md') as f:
+            self.example01_markdown = f.read()
 
     def test_constructor_empty(self):
         self.assertRaisesRegex(TypeError, 'missing 1', FileDescriptor)
@@ -212,144 +217,16 @@ class TestFileDescriptor(TestCase):
         self.assertRaisesRegex(AssertionError, 'header \(1\).*footer \(2\).*details \(\[1\]\)')
 
     def test_dehydrate(self):
-        self.assertDictEqual(
-            {
-                'details': [
-                    [
-                        {
-                            'type': 'pybatchfile.columns.CharColumn',
-                            'attributes': {
-                                'name': 'row_type',
-                                'size': 1,
-                                'description': 'row_type'
-                            }
-                        },
-                        {
-                            'type': 'pybatchfile.columns.CharColumn',
-                            'attributes': {
-                                'name': 'name',
-                                'size': 60,
-                                'description': 'name'
-                            }
-                        },
-                        {
-                            'type': 'pybatchfile.columns.RightCharColumn',
-                            'attributes': {
-                                'name': 'right_name',
-                                'size': 60,
-                                'description': 'right_name'
-                            }
-                        },
-                        {
-                            'type': 'pybatchfile.columns.PositiveIntegerColumn',
-                            'attributes': {
-                                'name': 'positive_interger',
-                                'size': 9,
-                                'description': 'positive_interger'
-                            }
-                        },
-                        {
-                            'type': 'pybatchfile.columns.PositiveDecimalColumn',
-                            'attributes': {
-                                'name': 'positive_decimal',
-                                'size': 9,
-                                'decimals': 2,
-                                'description': 'positive_decimal'
-                            }
-                        },
-                        {
-                            'type': 'pybatchfile.columns.DateTimeColumn',
-                            'attributes': {
-                                'name': 'datetime',
-                                'format': '%d%m%Y%H%M',
-                                'description': 'datetime'
-                            }
-                        },
-                        {
-                            'type': 'pybatchfile.columns.DateColumn',
-                            'attributes': {
-                                'name': 'date',
-                                'format': '%d%m%Y',
-                                'description': 'date'
-                            }
-                        },
-                        {
-                            'type': 'pybatchfile.columns.TimeColumn',
-                            'attributes': {
-                                'name': 'time',
-                                'format': '%H%M',
-                                'description': 'time'
-                            }
-                        }
-                    ]
-                ],
-                'header': [
-                    {
-                        'type': 'pybatchfile.columns.CharColumn',
-                        'attributes': {
-                            'name': 'row_type',
-                            'size': 1,
-                            'description': 'row_type'
-                        }
-                    },
-                    {
-                        'type': 'pybatchfile.columns.CharColumn',
-                        'attributes': {
-                            'name': 'filetype',
-                            'size': 5,
-                            'description': 'filetype'
-                        }
-                    },
-                    {
-                        'type': 'pybatchfile.columns.CharColumn',
-                        'attributes': {
-                            'name': 'fill',
-                            'size': 157,
-                            'description': 'fill'
-                        }
-                    }
-                ],
-                'footer': [
-                    {
-                        'type': 'pybatchfile.columns.CharColumn',
-                        'attributes': {
-                            'name': 'row_type',
-                            'size': 1,
-                            'description': 'row_type'
-                        }
-                    },
-                    {
-                        'type': 'pybatchfile.columns.PositiveIntegerColumn',
-                        'attributes': {
-                            'name': 'detail_count',
-                            'size': 4,
-                            'description': 'detail_count'
-                        }
-                    },
-                    {
-                        'type': 'pybatchfile.columns.PositiveIntegerColumn',
-                        'attributes': {
-                            'name': 'row_count',
-                            'size': 4,
-                            'description': 'row_count'
-                        }
-                    },
-                    {
-                        'type': 'pybatchfile.columns.CharColumn',
-                        'attributes': {
-                            'name': 'fill',
-                            'size': 154,
-                            'description': 'fill'
-                        }
-                    }
-                ]
-            },
-            self.file_descriptor.dehydrate()
-        )
+        self.assertDictEqual(json.loads(self.example01_json), self.file_descriptor.dehydrate())
 
     # def test_hydrate(self):
     #     self.fail()
-    #
+
+    def test_render_as_markdown(self):
+        with io.StringIO() as buf:
+            render_as_markdown(self.file_descriptor, buf)
+            self.assertEqual(self.example01_markdown, buf.getvalue())
+
     # def test_file_format_validate(self):
     #     fd = FileDescriptor(
     #         [
