@@ -25,58 +25,58 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
 
-# import importlib
-# from typing import Dict, List
-#
-#
+import importlib
+from typing import Dict, List
+
+
 # def get_full_class_name(instance_or_class):
 #     if isinstance(instance_or_class, type):
 #         return instance_or_class.__module__ + "." + instance_or_class.__qualname__
 #     else:
 #         return instance_or_class.__module__ + "." + instance_or_class.__class__.__qualname__
-#
-#
-# def create_class(full_class_name, *args, **kwargs):
-#     module_name, class_name = full_class_name.rsplit(".", 1)
-#     MyClass = getattr(importlib.import_module(module_name), class_name)
-#     return MyClass(*args, **kwargs)
-#
-#
-# def hydrate(representation: Dict):
-#     assert isinstance(representation, Dict), 'representation is not a Dict'
-#     assert 'type' in representation, 'type not informed in representation'
-#     assert isinstance(representation['type'], str), 'type is not a str'
-#
-#     if 'args' in representation:
-#         assert isinstance(representation['args'], List), 'args is not a List'
-#
-#     args = []
-#     if 'args' in representation:
-#         for arg in representation['args']
-#             args.append(arg)
-#
-#     kwargs = {}
-#     if 'kwargs' in representation:
-#         for kwarg in representation['kwargs']
-#             kwargs.append(kwarg)
-#     print(args, kwarg)
-#     # instance = create_class(representation['type'], *args, **kwargs)
-#
-#
-# class Hydrator(object):
-#
-#     @classmethod
-#     def hydrate(cls, representation: Dict):
-#         assert isinstance(representation, Dict), 'representation is not a Dict'
-#         assert 'type' in representation, 'type not informed in representation'
-#         assert isinstance(representation['type'], str), 'type is not a str'
-#
-#         if representation['type'] == get_full_class_name()
-#
-#         if 'args' in representation:
-#             assert isinstance(representation['args'], List), 'args is not a List'
-#
-#         args = representation['args'] if 'args' in representation else []
-#         kwargs = representation['args'] if 'kwargs' in representation else []
-#
-#         instance = create_class(representation['type'], *args, **kwargs)
+
+
+def create_class(full_class_name, *args, **kwargs):
+    module_name, class_name = full_class_name.rsplit(".", 1)
+    MyClass = getattr(importlib.import_module(module_name), class_name)
+    return MyClass(*args, **kwargs)
+
+
+def assert_element_isinstance(name, lst, cls):
+    if name in lst:
+        assert isinstance(lst[name], cls), '%s has informed, but is not a %s' % (name, cls)
+
+
+def assert_isinstance(name, value, cls):
+    assert isinstance(value, cls), '%s is not a %s' % (name, cls)
+
+
+def hydrate_class(representation: Dict):
+    assert_isinstance('representation', representation, Dict)
+    assert '_hydrate_as' in representation, '_hydrate_as is required'
+    assert_element_isinstance('_hydrate_as', representation, str)
+    assert_element_isinstance('args', representation, List)
+    assert_element_isinstance('kwargs', representation, Dict)
+    assert_element_isinstance('attributes', representation, Dict)
+
+    def hydrate_if_hydratable(o):
+        return hydrate_class(o) if isinstance(o, Dict) and '_hydrate_as' in o else o
+
+    hydrate_as = representation['_hydrate_as']
+    args = [hydrate_if_hydratable(arg)
+            for arg in (representation['args'] if 'args' in representation else [])]
+    kwargs = {k: hydrate_if_hydratable(v)
+              for k, v in (representation['kwargs'] if 'kwargs' in representation else {}).items()}
+    attributes = representation['attributes'] if 'attributes' in representation else {}
+
+    instance = create_class(hydrate_as, *args, **kwargs)
+    for attr_name in attributes.keys():
+        setattr(instance, attr_name, attributes[attr_name])
+    return instance
+
+
+class Hydrator(object):
+
+    @classmethod
+    def hydrate(cls, representation: Dict):
+        return hydrate_class(representation)
