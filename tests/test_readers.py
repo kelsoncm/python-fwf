@@ -28,10 +28,10 @@ import io
 import datetime
 from typing import Iterable, Iterator
 from unittest import TestCase
-from fwf.readers import Reader
-from fwf.columns import CharColumn, RightCharColumn, PositiveIntegerColumn, PositiveDecimalColumn, \
+from pyfwf.readers import Reader
+from pyfwf.columns import CharColumn, RightCharColumn, PositiveIntegerColumn, PositiveDecimalColumn, \
     DateTimeColumn, DateColumn, TimeColumn
-from fwf.descriptors import HeaderRowDescriptor, \
+from pyfwf.descriptors import HeaderRowDescriptor, \
     FooterRowDescriptor, DetailRowDescriptor, FileDescriptor
 
 

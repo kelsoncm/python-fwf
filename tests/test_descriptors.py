@@ -25,11 +25,11 @@ __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
 import json, io
 from unittest import TestCase
-from fwf.columns import CharColumn, RightCharColumn, PositiveIntegerColumn, PositiveDecimalColumn, \
+from pyfwf.columns import CharColumn, RightCharColumn, PositiveIntegerColumn, PositiveDecimalColumn, \
     DateTimeColumn, DateColumn, TimeColumn
-from fwf.descriptors import RowDescriptor, HeaderRowDescriptor, \
+from pyfwf.descriptors import RowDescriptor, HeaderRowDescriptor, \
     FooterRowDescriptor, DetailRowDescriptor, FileDescriptor
-from fwf.renders import render_as_markdown
+from pyfwf.renders import render_as_markdown
 
 
 class TestRowDescriptor(TestCase):
@@ -55,37 +55,37 @@ class TestRowDescriptor(TestCase):
 
     # def test_dehydrate(self):
     #     self.assertListEqual(
-    #         [{'type': 'fwf.columns.CharColumn',
+    #         [{'type': 'pyfwf.columns.CharColumn',
     #           'attributes': {'name': 'a_char', 'size': 1, 'description': 'a_char'}}],
     #         RowDescriptor([CharColumn("a_char", 1), ]).dehydrate()
     #     )
     #     self.assertListEqual(
-    #         [{'type': 'fwf.columns.RightCharColumn',
+    #         [{'type': 'pyfwf.columns.RightCharColumn',
     #           'attributes': {'name': 'a_rchar', 'size': 10, 'description': 'a_rchar'}}],
     #         RowDescriptor([RightCharColumn("a_rchar", 10)]).dehydrate()
     #     )
     #     self.assertListEqual(
-    #         [{'type': 'fwf.columns.PositiveIntegerColumn',
+    #         [{'type': 'pyfwf.columns.PositiveIntegerColumn',
     #           'attributes': {'name': 'a_int', 'size': 20, 'description': 'a_int'}}],
     #         RowDescriptor([PositiveIntegerColumn("a_int", 20)]).dehydrate()
     #     )
     #     self.assertListEqual(
-    #         [{'type': 'fwf.columns.PositiveDecimalColumn',
+    #         [{'type': 'pyfwf.columns.PositiveDecimalColumn',
     #           'attributes': {'name': 'a_float', 'size': 30, 'decimals': 2, 'description': 'a_float'}}],
     #         RowDescriptor([PositiveDecimalColumn("a_float", 30)]).dehydrate()
     #     )
     #     self.assertListEqual(
-    #         [{'type': 'fwf.columns.DateTimeColumn',
+    #         [{'type': 'pyfwf.columns.DateTimeColumn',
     #           'attributes': {'name': 'a_datetime', 'format': '%d%m%Y%H%M', 'description': 'a_datetime'}}],
     #         RowDescriptor([DateTimeColumn("a_datetime")]).dehydrate()
     #     )
     #     self.assertListEqual(
-    #         [{'type': 'fwf.columns.DateColumn',
+    #         [{'type': 'pyfwf.columns.DateColumn',
     #           'attributes': {'name': 'a_date', 'format': '%d%m%Y', 'description': 'a_date'}}],
     #         RowDescriptor([DateColumn("a_date")]).dehydrate()
     #     )
     #     self.assertListEqual(
-    #         [{'type': 'fwf.columns.TimeColumn',
+    #         [{'type': 'pyfwf.columns.TimeColumn',
     #           'attributes': {'name': 'a_time', 'format': '%H%M', 'description': 'a_time'}}],
     #         RowDescriptor([TimeColumn("a_time")]).dehydrate()
     #     )

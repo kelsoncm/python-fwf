@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
 from unittest import TestCase
-from fwf.hydrating import Hydrator, hydrate_object, dehydrate_object, get_full_class_name
+from pyfwf.hydrating import Hydrator, hydrate_object, dehydrate_object, get_full_class_name
 
 
 class WeCanTest(Hydrator):
