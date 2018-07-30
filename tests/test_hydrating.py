@@ -23,11 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
-#
-# import json, io
 from unittest import TestCase
-# from fwf.readers import Reader
-from fwf.hydrating import Hydrator, hydrate_object, dehydrate_object
+from fwf.hydrating import Hydrator, hydrate_object, dehydrate_object, get_full_class_name
 
 
 class WeCanTest(Hydrator):
@@ -39,6 +36,13 @@ class WeCanTest(Hydrator):
         self.nested = nested
         self.who = getattr(kwargs, 'test', None)
         self.age = getattr(kwargs, 'age', None)
+
+
+class TestFunctionGetFullClassName(TestCase):
+    def test_get_full_class_name(self):
+        classname = "test_hydrating.TestFunctionGetFullClassName"
+        self.assertEqual(classname, get_full_class_name(TestFunctionGetFullClassName))
+        self.assertEqual(classname, get_full_class_name(self))
 
 
 class TestFunctionHydrate(TestCase):
@@ -89,10 +93,10 @@ class TestFunctionHydrate(TestCase):
 
 
 class TestFunctionDehydrate(TestCase):
-    def test_hydrate_object(self):
+    def test_dehydrate_object(self):
         self.assertDictEqual({'_hydrate_as': 'test_hydrating.WeCanTest'}, dehydrate_object(WeCanTest()))
 
-    def test_hydrate_object__kwargs(self):
+    def test_dehydrate_object__kwargs(self):
         o1 = WeCanTest()
         o1.hydrating_kwargs = ['who']
         o1.who = 'me'
@@ -129,28 +133,28 @@ class TestFunctionDehydrate(TestCase):
                               }
                               }, dehydrate_object(o5))
 
-#
-# class TestHydrator(TestCase):
-#     def test_hydrate_wrong__empty(self):
-#         self.assertRaisesRegex(TypeError, 'missing 1', Hydrator.hydrate)
-#
-#     def test_hydrate__minimal(self):
-#         representation = {'_hydrate_as': 'test_hydrating.WeCanTest'}
-#         self.assertIsInstance(Hydrator.hydrate(representation), Hydrator)
-#
-#     def test_hydrate_let__attributes(self):
-#         representation = {'_hydrate_as': 'test_hydrating.WeCanTest',
-#                           'attributes': {'test': 'me', 'age': 12}}
-#         instance = Hydrator.hydrate(representation)
-#         self.assertEqual(instance.test, 'me')
-#         self.assertEqual(instance.age, 12)
-#
-#     def test_hydrate_let__attributes(self):
-#         representation = {
-#             '_hydrate_as': 'test_hydrating.WeCanTest',
-#             'args': [{'_hydrate_as': 'test_hydrating.WeCanTest'}, 'me', 12]
-#         }
-#         instance = Hydrator.hydrate(representation)
-#         self.assertEqual(instance.args, ['me', 12])
-#         self.assertIsInstance(instance.nested, WeCanTest)
-#         print(instance)
+
+class TestHydrator(TestCase):
+    def test_hydrate_wrong__empty(self):
+        self.assertRaisesRegex(TypeError, 'missing 1', Hydrator.hydrate)
+
+    def test_hydrate__minimal(self):
+        representation = {'_hydrate_as': 'test_hydrating.WeCanTest'}
+        self.assertIsInstance(Hydrator.hydrate(representation), Hydrator)
+
+    def test_hydrate_let__attributes(self):
+        representation = {'_hydrate_as': 'test_hydrating.WeCanTest',
+                          'attributes': {'test': 'me', 'age': 12}}
+        instance = Hydrator.hydrate(representation)
+        self.assertEqual(instance.test, 'me')
+        self.assertEqual(instance.age, 12)
+
+    def test_hydrate_let__nested(self):
+        representation = {
+            '_hydrate_as': 'test_hydrating.WeCanTest',
+            'args': [{'_hydrate_as': 'test_hydrating.WeCanTest'}, 'me', 12]
+        }
+        instance = Hydrator.hydrate(representation)
+        self.assertEqual(instance.args, ['me', 12])
+        self.assertIsInstance(instance.nested, WeCanTest)
+        print(instance)

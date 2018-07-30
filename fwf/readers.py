@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
 
-from typing import Iterator, List
+from typing import Iterable, List
 from io import StringIO, TextIOWrapper
 from .descriptors import FileDescriptor
 import collections
@@ -36,7 +36,7 @@ __all__ = ['Reader']
 
 class Reader:
 
-    def __init__(self, _iterable: Iterator[str], file_descriptor: FileDescriptor, newline: str="\n\r"):
+    def __init__(self, _iterable: Iterable[str], file_descriptor: FileDescriptor, newline: str="\n\r"):
         assert isinstance(_iterable, collections.Iterable), \
             'O argumento _iterable tem que ser um Iterator'
         assert isinstance(file_descriptor, FileDescriptor), \
@@ -57,9 +57,12 @@ class Reader:
         elif isinstance(self.iterable, str):
             self.filesize = len(self.iterable)
             self.iterable = StringIO(self.iterable)
+        elif isinstance(self.iterable, List):
+            self.iterable = iter(_iterable)
+            self.lines_count = len(_iterable)
+            self.filesize = sum([len(r) for r in _iterable])
         else:
-            self.filesize = 0
-            return
+            raise TypeError('Unsupported Iterable')
 
         assert float(self.filesize) % float(self.file_descriptor.line_size + len(self.newline)) == 0, \
             "Algumas linha não tem o tamanho correto (%d) ou não tem a quebra de linha adequada (%s), " \

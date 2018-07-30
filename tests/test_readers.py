@@ -24,16 +24,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
 
-import json, io, sys
+import io
+import datetime
+from typing import Iterable, Iterator
 from unittest import TestCase
 from fwf.readers import Reader
-import json, io
-from unittest import TestCase
 from fwf.columns import CharColumn, RightCharColumn, PositiveIntegerColumn, PositiveDecimalColumn, \
     DateTimeColumn, DateColumn, TimeColumn
-from fwf.descriptors import RowDescriptor, HeaderRowDescriptor, \
+from fwf.descriptors import HeaderRowDescriptor, \
     FooterRowDescriptor, DetailRowDescriptor, FileDescriptor
-import datetime
 
 
 class TestReader(TestCase):
@@ -74,6 +73,26 @@ class TestReader(TestCase):
             self.example01_are_right = f.read()
         with open('assets/example01_are_right_win.fwf') as f:
             self.example01_are_right_win = f.read()
+        self.example01_are_right_lst = [
+            "1FWF                                                                              "
+            "                                                                                 \n",
+            "2KELSON DA COSTA MEDEIROS                                                         "
+            "               KELSON DA COSTA MEDEIROS123456789123456789200102282359200102282359\n",
+            "2KELSON DA COSTA MEDEIROS                                                         "
+            "               KELSON DA COSTA MEDEIROS000000000000000000000000000000000000000000\n",
+            "900020003                                                                         "
+            "                                                                                 \n"
+        ]
+        self.example01_are_right_expected = [
+            {'row_type': '1', 'filetype': 'FWF', 'fill': ''},
+            {'row_type': '2', 'name': 'KELSON DA COSTA MEDEIROS', 'right_name': 'KELSON DA COSTA MEDEIROS',
+             'positive_interger': 123456789, 'positive_decimal': 1234567.89,
+             'datetime': datetime.datetime(228, 1, 20, 23, 59), 'date': datetime.date(228, 1, 20),
+             'time': datetime.time(23, 59)},
+            {'row_type': '2', 'name': 'KELSON DA COSTA MEDEIROS', 'right_name': 'KELSON DA COSTA MEDEIROS',
+             'positive_interger': 0, 'positive_decimal': 0.0, 'datetime': None, 'date': None, 'time': None},
+            {'row_type': '9', 'detail_count': 2, 'row_count': 3, 'fill': ''}
+        ]
 
     def test_constructor_empty(self):
         self.assertRaisesRegex(TypeError, 'missing 2', Reader)
@@ -91,6 +110,14 @@ class TestReader(TestCase):
         self.assertRaisesRegex(AssertionError, 'correto.*163.*adequada',
                                Reader, io.StringIO(self.example01_wrong_line_size), self.file_descriptor, "\n")
 
+    def test_validate_file_structure__wrong_iterable(self):
+        class WrongIterator(Iterable):
+            def __iter__(self):
+                pass
+        WrongIterator().__iter__()
+        self.assertRaisesRegex(TypeError, 'Unsupported Iterable',
+                               Reader, WrongIterator(), self.file_descriptor, "\n")
+
     def test_validate_file_structure__are_right_in_memory(self):
         reader = Reader(io.StringIO(self.example01_are_right), self.file_descriptor, "\n")
         self.assertEqual(4, reader.lines_count)
@@ -99,18 +126,13 @@ class TestReader(TestCase):
         self.assertEqual(4, Reader(self.example01_are_right, self.file_descriptor, "\n").lines_count)
         with open('assets/example01_are_right.fwf') as f:
             self.assertEqual(4, Reader(f, self.file_descriptor, "\n").lines_count)
+        self.assertEqual(4, Reader(self.example01_are_right, self.file_descriptor, "\n").lines_count)
+        self.assertEqual(4, Reader(self.example01_are_right_lst, self.file_descriptor, "\n").lines_count)
 
     def test_iterate(self):
         self.assertListEqual(
-            [
-                {'row_type': '1', 'filetype': 'FWF', 'fill': ''},
-                {'row_type': '2', 'name': 'KELSON DA COSTA MEDEIROS', 'right_name': 'KELSON DA COSTA MEDEIROS',
-                 'positive_interger': 123456789, 'positive_decimal': 1234567.89,
-                 'datetime': datetime.datetime(228, 1, 20, 23, 59), 'date': datetime.date(228, 1, 20),
-                 'time': datetime.time(23, 59)},
-                {'row_type': '2', 'name': 'KELSON DA COSTA MEDEIROS', 'right_name': 'KELSON DA COSTA MEDEIROS',
-                 'positive_interger': 0, 'positive_decimal': 0.0, 'datetime': None, 'date': None, 'time': None},
-                {'row_type': '9', 'detail_count': 2, 'row_count': 3, 'fill': ''}
-            ],
+            self.example01_are_right_expected,
             [row for row in Reader(self.example01_are_right, self.file_descriptor, "\n")])
-
+        self.assertListEqual(
+            self.example01_are_right_expected,
+            [row for row in Reader(self.example01_are_right_lst, self.file_descriptor, "\n")])
