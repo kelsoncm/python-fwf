@@ -41,7 +41,6 @@ setup(
     version='%s',
     download_url='https://github.com/kelsoncm/pyfwf/releases/tag/%s',
     description='Python library to manipulate fixed width file',
-    long_description=open('README.md', 'rt').read(),
     author='Kelson da Costa Medeiros',
     author_email='kelsoncm@gmail.com',
     url='https://github.com/kelsoncm/pyfwf',
