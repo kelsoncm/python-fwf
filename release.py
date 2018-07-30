@@ -36,16 +36,16 @@ from distutils.core import setup
 __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
 setup(
-    name='pybatchfile',
-    packages=['pybatchfile',],
+    name='fwf',
+    packages=['fwf',],
     version='%s',
-    download_url='https://github.com/kelsoncm/pybatchfile/releases/tag/%s',
-    description='Python library to manipulate batch (fixed width) file',
+    download_url='https://github.com/kelsoncm/fwf/releases/tag/%s',
+    description='Python library to manipulate fixed width file',
     long_description=open('README.md', 'rt').read(),
     author='Kelson da Costa Medeiros',
     author_email='kelsoncm@gmail.com',
-    url='https://github.com/kelsoncm/pybatchfile',
-    keywords=['python', 'file', 'batch', 'fixed', 'width', ],
+    url='https://github.com/kelsoncm/fwf',
+    keywords=['python', 'file', 'fixed', 'width', ],
     classifiers=[]
 )
 """ % (args.version, args.version,))
@@ -57,4 +57,4 @@ __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 # os.system("git tag %s" % args.version)
 # os.system("git push --tags origin master")
 os.system("python setup.py sdist")
-# os.system("twine upload dist/pybatchfile-%s.tar.gz" % args.version)
+# os.system("twine upload dist/fwf-%s.tar.gz" % args.version)

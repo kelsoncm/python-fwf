@@ -25,11 +25,11 @@ __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
 import json, io
 from unittest import TestCase
-from pybatchfile.columns import CharColumn, RightCharColumn, PositiveIntegerColumn, PositiveDecimalColumn, \
+from fwf.columns import CharColumn, RightCharColumn, PositiveIntegerColumn, PositiveDecimalColumn, \
     DateTimeColumn, DateColumn, TimeColumn
-from pybatchfile.descriptors import RowDescriptor, HeaderRowDescriptor, \
+from fwf.descriptors import RowDescriptor, HeaderRowDescriptor, \
     FooterRowDescriptor, DetailRowDescriptor, FileDescriptor
-from pybatchfile.renders import render_as_markdown
+from fwf.renders import render_as_markdown
 
 
 class TestRowDescriptor(TestCase):
@@ -55,37 +55,37 @@ class TestRowDescriptor(TestCase):
 
     # def test_dehydrate(self):
     #     self.assertListEqual(
-    #         [{'type': 'pybatchfile.columns.CharColumn',
+    #         [{'type': 'fwf.columns.CharColumn',
     #           'attributes': {'name': 'a_char', 'size': 1, 'description': 'a_char'}}],
     #         RowDescriptor([CharColumn("a_char", 1), ]).dehydrate()
     #     )
     #     self.assertListEqual(
-    #         [{'type': 'pybatchfile.columns.RightCharColumn',
+    #         [{'type': 'fwf.columns.RightCharColumn',
     #           'attributes': {'name': 'a_rchar', 'size': 10, 'description': 'a_rchar'}}],
     #         RowDescriptor([RightCharColumn("a_rchar", 10)]).dehydrate()
     #     )
     #     self.assertListEqual(
-    #         [{'type': 'pybatchfile.columns.PositiveIntegerColumn',
+    #         [{'type': 'fwf.columns.PositiveIntegerColumn',
     #           'attributes': {'name': 'a_int', 'size': 20, 'description': 'a_int'}}],
     #         RowDescriptor([PositiveIntegerColumn("a_int", 20)]).dehydrate()
     #     )
     #     self.assertListEqual(
-    #         [{'type': 'pybatchfile.columns.PositiveDecimalColumn',
+    #         [{'type': 'fwf.columns.PositiveDecimalColumn',
     #           'attributes': {'name': 'a_float', 'size': 30, 'decimals': 2, 'description': 'a_float'}}],
     #         RowDescriptor([PositiveDecimalColumn("a_float", 30)]).dehydrate()
     #     )
     #     self.assertListEqual(
-    #         [{'type': 'pybatchfile.columns.DateTimeColumn',
+    #         [{'type': 'fwf.columns.DateTimeColumn',
     #           'attributes': {'name': 'a_datetime', 'format': '%d%m%Y%H%M', 'description': 'a_datetime'}}],
     #         RowDescriptor([DateTimeColumn("a_datetime")]).dehydrate()
     #     )
     #     self.assertListEqual(
-    #         [{'type': 'pybatchfile.columns.DateColumn',
+    #         [{'type': 'fwf.columns.DateColumn',
     #           'attributes': {'name': 'a_date', 'format': '%d%m%Y', 'description': 'a_date'}}],
     #         RowDescriptor([DateColumn("a_date")]).dehydrate()
     #     )
     #     self.assertListEqual(
-    #         [{'type': 'pybatchfile.columns.TimeColumn',
+    #         [{'type': 'fwf.columns.TimeColumn',
     #           'attributes': {'name': 'a_time', 'format': '%H%M', 'description': 'a_time'}}],
     #         RowDescriptor([TimeColumn("a_time")]).dehydrate()
     #     )

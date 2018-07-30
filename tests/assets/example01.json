@@ -1,10 +1,10 @@
 {
-  "_hydrate_as": "pybatchfile.descriptors.FileDescriptor",
+  "_hydrate_as": "fwf.descriptors.FileDescriptor",
   "args": {
     "details": [
       [
         {
-          "_hydrate_as": "pybatchfile.columns.CharColumn",
+          "_hydrate_as": "fwf.columns.CharColumn",
           "args": {
             "name": "row_type",
             "size": 1,
@@ -12,7 +12,7 @@
           }
         },
         {
-          "_hydrate_as": "pybatchfile.columns.CharColumn",
+          "_hydrate_as": "fwf.columns.CharColumn",
           "args": {
             "name": "name",
             "size": 60,
@@ -20,7 +20,7 @@
           }
         },
         {
-          "_hydrate_as": "pybatchfile.columns.RightCharColumn",
+          "_hydrate_as": "fwf.columns.RightCharColumn",
           "args": {
             "name": "right_name",
             "size": 60,
@@ -28,7 +28,7 @@
           }
         },
         {
-          "_hydrate_as": "pybatchfile.columns.PositiveIntegerColumn",
+          "_hydrate_as": "fwf.columns.PositiveIntegerColumn",
           "args": {
             "name": "positive_interger",
             "size": 9,
@@ -36,7 +36,7 @@
           }
         },
         {
-          "_hydrate_as": "pybatchfile.columns.PositiveDecimalColumn",
+          "_hydrate_as": "fwf.columns.PositiveDecimalColumn",
           "args": {
             "name": "positive_decimal",
             "size": 9,
@@ -45,7 +45,7 @@
           }
         },
         {
-          "_hydrate_as": "pybatchfile.columns.DateTimeColumn",
+          "_hydrate_as": "fwf.columns.DateTimeColumn",
           "args": {
             "name": "datetime",
             "format": "%d%m%Y%H%M",
@@ -53,7 +53,7 @@
           }
         },
         {
-          "_hydrate_as": "pybatchfile.columns.DateColumn",
+          "_hydrate_as": "fwf.columns.DateColumn",
           "args": {
             "name": "date",
             "format": "%d%m%Y",
@@ -61,7 +61,7 @@
           }
         },
         {
-          "_hydrate_as": "pybatchfile.columns.TimeColumn",
+          "_hydrate_as": "fwf.columns.TimeColumn",
           "args": {
             "name": "time",
             "format": "%H%M",
@@ -72,7 +72,7 @@
     ],
     "header": [
       {
-        "_hydrate_as": "pybatchfile.columns.CharColumn",
+        "_hydrate_as": "fwf.columns.CharColumn",
         "args": {
           "name": "row_type",
           "size": 1,
@@ -80,25 +80,25 @@
         }
       },
       {
-        "_hydrate_as": "pybatchfile.columns.CharColumn",
+        "_hydrate_as": "fwf.columns.CharColumn",
         "args": {
           "name": "filetype",
-          "size": 5,
+          "size": 3,
           "description": "filetype"
         }
       },
       {
-        "_hydrate_as": "pybatchfile.columns.CharColumn",
+        "_hydrate_as": "fwf.columns.CharColumn",
         "args": {
           "name": "fill",
-          "size": 157,
+          "size": 159,
           "description": "fill"
         }
       }
     ],
     "footer": [
       {
-        "_hydrate_as": "pybatchfile.columns.CharColumn",
+        "_hydrate_as": "fwf.columns.CharColumn",
         "args": {
           "name": "row_type",
           "size": 1,
@@ -106,7 +106,7 @@
         }
       },
       {
-        "_hydrate_as": "pybatchfile.columns.PositiveIntegerColumn",
+        "_hydrate_as": "fwf.columns.PositiveIntegerColumn",
         "args": {
           "name": "detail_count",
           "size": 4,
@@ -114,7 +114,7 @@
         }
       },
       {
-        "_hydrate_as": "pybatchfile.columns.PositiveIntegerColumn",
+        "_hydrate_as": "fwf.columns.PositiveIntegerColumn",
         "args": {
           "name": "row_count",
           "size": 4,
@@ -122,7 +122,7 @@
         }
       },
       {
-        "_hydrate_as": "pybatchfile.columns.CharColumn",
+        "_hydrate_as": "fwf.columns.CharColumn",
         "args": {
           "name": "fill",
           "size": 154,

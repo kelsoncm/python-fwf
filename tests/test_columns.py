@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
 from unittest import TestCase
-from pybatchfile.columns import CharColumn, RightCharColumn, PositiveIntegerColumn, PositiveDecimalColumn, \
+from fwf.columns import CharColumn, RightCharColumn, PositiveIntegerColumn, PositiveDecimalColumn, \
     DateTimeColumn, DateColumn, TimeColumn
 from datetime import datetime, date, time
 
@@ -93,9 +93,9 @@ class TestCharColumn(TestCase):
         self.assertEqual("    ", cd.to_str(" "))
 
     def test_dehydrate(self):
-        self.assertDictEqual({'_hydrate_as': 'pybatchfile.columns.CharColumn', 'args': ['col_name', 20, 'col_desc']},
+        self.assertDictEqual({'_hydrate_as': 'fwf.columns.CharColumn', 'args': ['col_name', 20, 'col_desc']},
                              CharColumn('col_name', 20, 'col_desc').dehydrate())
-        self.assertDictEqual({'_hydrate_as': 'pybatchfile.columns.CharColumn', 'args': ['col_name', 20, 'col_name']},
+        self.assertDictEqual({'_hydrate_as': 'fwf.columns.CharColumn', 'args': ['col_name', 20, 'col_name']},
                              CharColumn('col_name', 20).dehydrate())
 
 
@@ -167,9 +167,9 @@ class TestRightCharColumn(TestCase):
         self.assertEqual("    ", cd.to_str(None))
 
     def test_dehydrate(self):
-        self.assertDictEqual({'_hydrate_as': 'pybatchfile.columns.RightCharColumn', 'args': ['col_name', 20, 'col_desc']},
+        self.assertDictEqual({'_hydrate_as': 'fwf.columns.RightCharColumn', 'args': ['col_name', 20, 'col_desc']},
                              RightCharColumn('col_name', 20, 'col_desc').dehydrate())
-        self.assertDictEqual({'_hydrate_as': 'pybatchfile.columns.RightCharColumn', 'args': ['col_name', 20, 'col_name']},
+        self.assertDictEqual({'_hydrate_as': 'fwf.columns.RightCharColumn', 'args': ['col_name', 20, 'col_name']},
                              RightCharColumn('col_name', 20).dehydrate())
 
 
@@ -242,9 +242,9 @@ class TestPositiveIntegerColumn(TestCase):
         self.assertEqual("0000", cd.to_str(None))
 
     def test_dehydrate(self):
-        self.assertDictEqual({'_hydrate_as': 'pybatchfile.columns.PositiveIntegerColumn', 'args': ['col_name', 20, 'col_desc']},
+        self.assertDictEqual({'_hydrate_as': 'fwf.columns.PositiveIntegerColumn', 'args': ['col_name', 20, 'col_desc']},
                              PositiveIntegerColumn('col_name', 20, 'col_desc').dehydrate())
-        self.assertDictEqual({'_hydrate_as': 'pybatchfile.columns.PositiveIntegerColumn', 'args': ['col_name', 20, 'col_name']},
+        self.assertDictEqual({'_hydrate_as': 'fwf.columns.PositiveIntegerColumn', 'args': ['col_name', 20, 'col_name']},
                              PositiveIntegerColumn('col_name', 20).dehydrate())
 
 
@@ -331,9 +331,9 @@ class TestPositiveDecimalColumn(TestCase):
         self.assertEqual("0000", cd.to_str(None))
 
     def test_dehydrate(self):
-        self.assertDictEqual({'_hydrate_as': 'pybatchfile.columns.PositiveDecimalColumn', 'args': ['col_name', 20, 2, 'col_name']},
+        self.assertDictEqual({'_hydrate_as': 'fwf.columns.PositiveDecimalColumn', 'args': ['col_name', 20, 2, 'col_name']},
                              PositiveDecimalColumn('col_name', 20).dehydrate())
-        self.assertDictEqual({'_hydrate_as': 'pybatchfile.columns.PositiveDecimalColumn', 'args': ['col_name', 20, 4, 'col_name']},
+        self.assertDictEqual({'_hydrate_as': 'fwf.columns.PositiveDecimalColumn', 'args': ['col_name', 20, 4, 'col_name']},
                              PositiveDecimalColumn('col_name', 20, 4).dehydrate())
 
 
@@ -408,11 +408,11 @@ class TestDateTimeColumn(TestCase):
         self.assertEqual("2802012359", DateTimeColumn("dt", '%d%m%y%H%M').to_str(datetime(2001, 2, 28, 23, 59)))
 
     def test_dehydrate(self):
-        self.assertDictEqual({'_hydrate_as': 'pybatchfile.columns.DateTimeColumn', 'args': ['col_name', '%d%m%Y%H%M', 'col_name']},
+        self.assertDictEqual({'_hydrate_as': 'fwf.columns.DateTimeColumn', 'args': ['col_name', '%d%m%Y%H%M', 'col_name']},
                              DateTimeColumn('col_name').dehydrate())
-        self.assertDictEqual({'_hydrate_as': 'pybatchfile.columns.DateTimeColumn', 'args': ['col_name', '%d%m%y%H%M', 'col_name']},
+        self.assertDictEqual({'_hydrate_as': 'fwf.columns.DateTimeColumn', 'args': ['col_name', '%d%m%y%H%M', 'col_name']},
                              DateTimeColumn('col_name', '%d%m%y%H%M').dehydrate())
-        self.assertDictEqual({'_hydrate_as': 'pybatchfile.columns.DateTimeColumn', 'args': ['col_name', '%d%m%y%H%M', 'col_desc']},
+        self.assertDictEqual({'_hydrate_as': 'fwf.columns.DateTimeColumn', 'args': ['col_name', '%d%m%y%H%M', 'col_desc']},
                              DateTimeColumn('col_name', '%d%m%y%H%M', 'col_desc').dehydrate())
 
 
@@ -483,11 +483,11 @@ class TestDateColumn(TestCase):
         self.assertEqual("280201", DateColumn("dt", '%d%m%y').to_str(date(2001, 2, 28)))
 
     def test_dehydrate(self):
-        self.assertDictEqual({'_hydrate_as': 'pybatchfile.columns.DateColumn', 'args': ['col_name', '%d%m%Y', 'col_name']},
+        self.assertDictEqual({'_hydrate_as': 'fwf.columns.DateColumn', 'args': ['col_name', '%d%m%Y', 'col_name']},
                              DateColumn('col_name').dehydrate())
-        self.assertDictEqual({'_hydrate_as': 'pybatchfile.columns.DateColumn', 'args': ['col_name', '%d%m%y', 'col_name']},
+        self.assertDictEqual({'_hydrate_as': 'fwf.columns.DateColumn', 'args': ['col_name', '%d%m%y', 'col_name']},
                              DateColumn('col_name', '%d%m%y').dehydrate())
-        self.assertDictEqual({'_hydrate_as': 'pybatchfile.columns.DateColumn', 'args': ['col_name', '%d%m%y', 'col_desc']},
+        self.assertDictEqual({'_hydrate_as': 'fwf.columns.DateColumn', 'args': ['col_name', '%d%m%y', 'col_desc']},
                              DateColumn('col_name', '%d%m%y', 'col_desc').dehydrate())
 
 
@@ -560,9 +560,9 @@ class TestTimeColumn(TestCase):
         self.assertEqual("23:59", TimeColumn("time", '%H:%M').to_str(time(23, 59)))
 
     def test_dehydrate(self):
-        self.assertDictEqual({'_hydrate_as': 'pybatchfile.columns.TimeColumn', 'args': ['col_name', '%H%M', 'col_name']},
+        self.assertDictEqual({'_hydrate_as': 'fwf.columns.TimeColumn', 'args': ['col_name', '%H%M', 'col_name']},
                              TimeColumn('col_name').dehydrate())
-        self.assertDictEqual({'_hydrate_as': 'pybatchfile.columns.TimeColumn', 'args': ['col_name', '%H%M', 'col_name']},
+        self.assertDictEqual({'_hydrate_as': 'fwf.columns.TimeColumn', 'args': ['col_name', '%H%M', 'col_name']},
                              TimeColumn('col_name', '%H%M').dehydrate())
-        self.assertDictEqual({'_hydrate_as': 'pybatchfile.columns.TimeColumn', 'args': ['col_name', '%H%M', 'col_desc']},
+        self.assertDictEqual({'_hydrate_as': 'fwf.columns.TimeColumn', 'args': ['col_name', '%H%M', 'col_desc']},
                              TimeColumn('col_name', '%H%M', 'col_desc').dehydrate())

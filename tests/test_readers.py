@@ -26,12 +26,12 @@ __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
 import json, io, sys
 from unittest import TestCase
-from pybatchfile.readers import Reader
+from fwf.readers import Reader
 import json, io
 from unittest import TestCase
-from pybatchfile.columns import CharColumn, RightCharColumn, PositiveIntegerColumn, PositiveDecimalColumn, \
+from fwf.columns import CharColumn, RightCharColumn, PositiveIntegerColumn, PositiveDecimalColumn, \
     DateTimeColumn, DateColumn, TimeColumn
-from pybatchfile.descriptors import RowDescriptor, HeaderRowDescriptor, \
+from fwf.descriptors import RowDescriptor, HeaderRowDescriptor, \
     FooterRowDescriptor, DetailRowDescriptor, FileDescriptor
 import datetime
 
@@ -54,8 +54,8 @@ class TestReader(TestCase):
             ],
             HeaderRowDescriptor([
                 CharColumn('row_type', 1),
-                CharColumn('filetype', 5),
-                CharColumn('fill', 157),
+                CharColumn('filetype', 3),
+                CharColumn('fill', 159),
             ]),
             FooterRowDescriptor([
                 CharColumn('row_type', 1),
@@ -68,11 +68,11 @@ class TestReader(TestCase):
             self.example01_json = f.read()
         with open('assets/example01.md') as f:
             self.example01_markdown = f.read()
-        with open('assets/example01_wrong_line_size.batch') as f:
+        with open('assets/example01_wrong_line_size.fwf') as f:
             self.example01_wrong_line_size = f.read()
-        with open('assets/example01_are_right.batch') as f:
+        with open('assets/example01_are_right.fwf') as f:
             self.example01_are_right = f.read()
-        with open('assets/example01_are_right_win.batch') as f:
+        with open('assets/example01_are_right_win.fwf') as f:
             self.example01_are_right_win = f.read()
 
     def test_constructor_empty(self):
@@ -97,13 +97,13 @@ class TestReader(TestCase):
 
     def test_validate_file_structure__are_right_file(self):
         self.assertEqual(4, Reader(self.example01_are_right, self.file_descriptor, "\n").lines_count)
-        with open('assets/example01_are_right.batch') as f:
+        with open('assets/example01_are_right.fwf') as f:
             self.assertEqual(4, Reader(f, self.file_descriptor, "\n").lines_count)
 
     def test_iterate(self):
         self.assertListEqual(
             [
-                {'row_type': '1', 'filetype': 'BATCH', 'fill': ''},
+                {'row_type': '1', 'filetype': 'FWF', 'fill': ''},
                 {'row_type': '2', 'name': 'KELSON DA COSTA MEDEIROS', 'right_name': 'KELSON DA COSTA MEDEIROS',
                  'positive_interger': 123456789, 'positive_decimal': 1234567.89,
                  'datetime': datetime.datetime(228, 1, 20, 23, 59), 'date': datetime.date(228, 1, 20),
