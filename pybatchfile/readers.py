@@ -25,48 +25,48 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
 
-from typing import Iterator
+from typing import Iterator, List
+from io import StringIO, TextIOWrapper
 from .descriptors import FileDescriptor
 import collections
-import csv
+
+
+__all__ = ['Reader']
 
 
 class Reader:
 
-    def __init__(self, _iterable: Iterator[str], file_descriptor: FileDescriptor, lines_count: int=None):
+    def __init__(self, _iterable: Iterator[str], file_descriptor: FileDescriptor, newline: str="\n\r"):
         assert isinstance(_iterable, collections.Iterable), \
             'O argumento _iterable tem que ser um Iterator'
         assert isinstance(file_descriptor, FileDescriptor), \
             'O argumento file_descriptor tem que ser um FileDescriptor'
-        assert (not isinstance(lines_count, bool) and isinstance(lines_count, int)) or lines_count is None, \
-            'O argumento lines_count tem que ser um int ou um None'
+        assert isinstance(newline, str) and newline in ["\n", "\r", "\n\r"], \
+            'O argumento newline tem que ser uma str e conter "\\n", "\\r" ou "\\n\\r"'
 
-        import itertools
-        it1, it2 = itertools.tee(_iterable, 2)
-        self.iterable = it1
-        self.to_validate_line_size = it2
+        self.iterable = _iterable
         self.file_descriptor = file_descriptor
-        self.lines_count = lines_count
         self.line_num = 0
+        self.newline = newline
+        self.lines_count = 0
 
-    @staticmethod
-    def _get_line_content(r):
-        if r.endswith("\r\n"):
-            return r[:-2]
-        elif r.endswith("\r") or r.endswith("\n"):
-            return r[:-1]
+        if isinstance(self.iterable, StringIO):
+            self.filesize = len(self.iterable.getvalue())
+        elif isinstance(self.iterable, TextIOWrapper):
+            self.filesize = len(self.iterable.read())
+        elif isinstance(self.iterable, str):
+            self.filesize = len(self.iterable)
+            self.iterable = StringIO(self.iterable)
         else:
-            return r
+            self.filesize = 0
+            return
 
-    def validate_file_structure(self):
-        line = 0
-        file_line_size = self.file_descriptor._line_size
-        for row in self.to_validate_line_size:
-            line_size = len(self._get_line_content(row))
-            assert line_size == self.file_descriptor._line_size, \
-                'Wrong line size on %d, instead of %d we have %s: [%s]' % (line, file_line_size, line_size, row)
-            line += 1
-        return line
+        assert float(self.filesize) % float(self.file_descriptor.line_size + len(self.newline)) == 0, \
+            "Algumas linha não tem o tamanho correto (%d) ou não tem a quebra de linha adequada (%s), " \
+            "total de bytes %d e total de linhas %f" % \
+            (self.file_descriptor.line_size, self.newline.replace("\n", "\\n").replace("\r", "\\r"),
+             self.filesize, float(self.filesize) / float(self.file_descriptor.line_size + len(self.newline)))
+        self.lines_count = self.filesize / (self.file_descriptor.line_size + len(self.newline))
 
     def __iter__(self):
         return self
@@ -74,10 +74,10 @@ class Reader:
     def __next__(self):
         row = next(self.iterable)
         self.line_num += 1
-        print(self.line_num, self.lines_count)
+        lc = row[:-len(self.newline)]
         if self.file_descriptor.header and self.line_num == 1:
-            return self.file_descriptor.header.get_values(self._get_line_content(row))
+            return self.file_descriptor.header.get_values(lc)
         elif self.file_descriptor.footer and self.lines_count and self.lines_count == self.line_num:
-            return self.file_descriptor.footer.get_values(self._get_line_content(row))
+            return self.file_descriptor.footer.get_values(lc)
         else:
-            return self.file_descriptor.details[0].get_values(self._get_line_content(row))
+            return self.file_descriptor.details[0].get_values(lc)

@@ -33,6 +33,7 @@ from pybatchfile.columns import CharColumn, RightCharColumn, PositiveIntegerColu
     DateTimeColumn, DateColumn, TimeColumn
 from pybatchfile.descriptors import RowDescriptor, HeaderRowDescriptor, \
     FooterRowDescriptor, DetailRowDescriptor, FileDescriptor
+import datetime
 
 
 class TestReader(TestCase):
@@ -83,33 +84,33 @@ class TestReader(TestCase):
         self.assertRaisesRegex(AssertionError, 'FileDescriptor', Reader, [], True)
         self.assertRaisesRegex(AssertionError, 'FileDescriptor', Reader, [], 1)
         self.assertRaisesRegex(AssertionError, 'FileDescriptor', Reader, [], 1)
-        self.assertRaisesRegex(AssertionError, 'lines_count', Reader, [], self.file_descriptor, "")
-        self.assertRaisesRegex(AssertionError, 'lines_count', Reader, [], self.file_descriptor, False)
-
-    def test_constructor_args_ok(self):
-        self.assertIsInstance(Reader([], self.file_descriptor), Reader)
-        with open('assets/example01_are_right.batch') as f:
-            self.assertIsInstance(Reader(f, self.file_descriptor), Reader)
-        with io.StringIO() as f:
-            self.assertIsInstance(Reader(f, self.file_descriptor), Reader)
+        self.assertRaisesRegex(AssertionError, 'newline', Reader, [], self.file_descriptor, "")
+        self.assertRaisesRegex(AssertionError, 'newline', Reader, [], self.file_descriptor, False)
 
     def test_validate_file_structure__wrong_line_size(self):
-        reader = Reader(io.StringIO(self.example01_wrong_line_size), self.file_descriptor)
-        self.assertRaisesRegex(AssertionError, 'instead of 163 we have 6', reader.validate_file_structure)
+        self.assertRaisesRegex(AssertionError, 'correto.*163.*adequada',
+                               Reader, io.StringIO(self.example01_wrong_line_size), self.file_descriptor, "\n")
 
-    def test_validate_file_structure__are_right(self):
-        reader = Reader(io.StringIO(self.example01_are_right), self.file_descriptor)
-        reader.lines_count = reader.validate_file_structure()
+    def test_validate_file_structure__are_right_in_memory(self):
+        reader = Reader(io.StringIO(self.example01_are_right), self.file_descriptor, "\n")
         self.assertEqual(4, reader.lines_count)
 
-    def test_constructor(self):
+    def test_validate_file_structure__are_right_file(self):
+        self.assertEqual(4, Reader(self.example01_are_right, self.file_descriptor, "\n").lines_count)
         with open('assets/example01_are_right.batch') as f:
-            reader = Reader(io.StringIO(self.example01_are_right), self.file_descriptor)
-            reader.lines_count = reader.validate_file_structure()
-            for row in reader:
-                print(row)
-        with open('assets/example01_are_right_win.batch') as f:
-            reader = Reader(io.StringIO(self.example01_are_right), self.file_descriptor)
-            reader.lines_count = reader.validate_file_structure()
-            for row in reader:
-                print(row)
+            self.assertEqual(4, Reader(f, self.file_descriptor, "\n").lines_count)
+
+    def test_iterate(self):
+        self.assertListEqual(
+            [
+                {'row_type': '1', 'filetype': 'BATCH', 'fill': ''},
+                {'row_type': '2', 'name': 'KELSON DA COSTA MEDEIROS', 'right_name': 'KELSON DA COSTA MEDEIROS',
+                 'positive_interger': 123456789, 'positive_decimal': 1234567.89,
+                 'datetime': datetime.datetime(228, 1, 20, 23, 59), 'date': datetime.date(228, 1, 20),
+                 'time': datetime.time(23, 59)},
+                {'row_type': '2', 'name': 'KELSON DA COSTA MEDEIROS', 'right_name': 'KELSON DA COSTA MEDEIROS',
+                 'positive_interger': 0, 'positive_decimal': 0.0, 'datetime': None, 'date': None, 'time': None},
+                {'row_type': '9', 'detail_count': 2, 'row_count': 3, 'fill': ''}
+            ],
+            [row for row in Reader(self.example01_are_right, self.file_descriptor, "\n")])
+

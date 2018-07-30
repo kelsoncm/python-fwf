@@ -24,16 +24,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
+__all__ = ['hydrate_object', 'dehydrate_object', 'Hydrator']
 
 import importlib
 from typing import Dict, List
 
 
-# def get_full_class_name(instance_or_class):
-#     if isinstance(instance_or_class, type):
-#         return instance_or_class.__module__ + "." + instance_or_class.__qualname__
-#     else:
-#         return instance_or_class.__module__ + "." + instance_or_class.__class__.__qualname__
+def get_full_class_name(instance_or_class):
+    if isinstance(instance_or_class, type):
+        return instance_or_class.__module__ + "." + instance_or_class.__qualname__
+    else:
+        return instance_or_class.__module__ + "." + instance_or_class.__class__.__qualname__
 
 
 def create_class(full_class_name, *args, **kwargs):
@@ -51,7 +52,7 @@ def assert_isinstance(name, value, cls):
     assert isinstance(value, cls), '%s is not a %s' % (name, cls)
 
 
-def hydrate_class(representation: Dict):
+def hydrate_object(representation: Dict):
     assert_isinstance('representation', representation, Dict)
     assert '_hydrate_as' in representation, '_hydrate_as is required'
     assert_element_isinstance('_hydrate_as', representation, str)
@@ -60,7 +61,7 @@ def hydrate_class(representation: Dict):
     assert_element_isinstance('attributes', representation, Dict)
 
     def hydrate_if_hydratable(o):
-        return hydrate_class(o) if isinstance(o, Dict) and '_hydrate_as' in o else o
+        return hydrate_object(o) if isinstance(o, Dict) and '_hydrate_as' in o else o
 
     hydrate_as = representation['_hydrate_as']
     args = [hydrate_if_hydratable(arg)
@@ -75,8 +76,25 @@ def hydrate_class(representation: Dict):
     return instance
 
 
+def dehydrate_object(obj):
+    def dehydrate_if_hydratable(o):
+        return dehydrate_object(o) if isinstance(o, Hydrator) else o
+
+    result = {"_hydrate_as": get_full_class_name(obj)}
+    if hasattr(obj, 'hydrating_args'):
+        result["args"] = [dehydrate_if_hydratable(getattr(obj, name)) for name in obj.hydrating_args]
+    if hasattr(obj, 'hydrating_kwargs'):
+        result["kwargs"] = {name: dehydrate_if_hydratable(getattr(obj, name)) for name in obj.hydrating_kwargs}
+    if hasattr(obj, 'hydrating_attributes'):
+        result["attributes"] = {name: dehydrate_if_hydratable(getattr(obj, name)) for name in obj.hydrating_attributes}
+    return result
+
+
 class Hydrator(object):
+
+    def dehydrate(self):
+        return dehydrate_object(self)
 
     @classmethod
     def hydrate(cls, representation: Dict):
-        return hydrate_class(representation)
+        return hydrate_object(representation)

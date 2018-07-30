@@ -25,16 +25,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
 
-from datetime import datetime, date, time
 import re
+from datetime import datetime, date, time
+from .hydrating import Hydrator
 
 
-class AbstractColumn(object):
+class AbstractColumn(Hydrator):
     to_str_assertion_types = None
     to_str_assertion_class = None
     to_str_none_pad = None
     to_str_pad_template = None
-    to_hydrating = ['name', 'size', 'description']
+    hydrating_args = ['name', 'size', 'description']
 
     def __init__(self, _name: str, size: int, description: str=None):
         super(AbstractColumn, self).__init__()
@@ -81,9 +82,6 @@ class AbstractColumn(object):
         else:
             return self._validate_to_str_size((self.to_str_pad_template % self.size).format(value))
 
-    def dehydrate(self):
-        return dict([(name, getattr(self, name)) for name in self.to_hydrating])
-
 
 class CharColumn(AbstractColumn):
 
@@ -119,7 +117,7 @@ class PositiveIntegerColumn(AbstractColumn):
 class PositiveDecimalColumn(PositiveIntegerColumn):
     to_str_assertion_types = 'positive decimal'
     to_str_assertion_class = float
-    to_hydrating = ['name', 'size', 'decimals', 'description']
+    hydrating_args = ['name', 'size', 'decimals', 'description']
 
     def __init__(self, _name: str, size: int,  decimals: int=2, description: str=None):
         super(PositiveDecimalColumn, self).__init__(_name, size, description)
@@ -150,7 +148,7 @@ class DateTimeColumn(AbstractColumn):
     to_str_assertion_class = datetime
     to_str_none_pad = '0'
     format_num_elements = 5
-    to_hydrating = ['name', 'format', 'description']
+    hydrating_args = ['name', 'format', 'description']
 
     def __init__(self, _name: str, _format: str='%d%m%Y%H%M', description: str=None):
         assert isinstance(_name, str), \

@@ -29,13 +29,10 @@ from io import StringIO
 import importlib
 from typing import List, Dict
 from .columns import AbstractColumn
+from .hydrating import Hydrator
 
 
-# def get_full_class_name(instance):
-#     return instance.__module__ + "." + instance.__class__.__qualname__
-
-
-class RowDescriptor(object):
+class RowDescriptor(Hydrator):
 
     def __init__(self, columns: List[AbstractColumn]):
         super(RowDescriptor, self).__init__()
@@ -64,16 +61,7 @@ class RowDescriptor(object):
             prev = col
 
     def get_values(self, row):
-        return [col.to_value(row[col.start-1:col.end]) for col in self.columns]
-
-    # def dehydrate(self):
-    #     return [{'type': get_full_class_name(col), 'args': col.dehydrate()} for col in self.columns]
-    #
-    # @classmethod
-    # def hydrate(cls, representation):
-    #     print(representation)
-    #     for col in representation:
-    #         pass
+        return {col.name: col.to_value(row[col.start-1:col.end]) for col in self.columns}
 
 
 class HeaderRowDescriptor(RowDescriptor):
@@ -88,7 +76,7 @@ class DetailRowDescriptor(RowDescriptor):
     pass
 
 
-class FileDescriptor(object):
+class FileDescriptor(Hydrator):
     def __init__(self,
                  details: List[DetailRowDescriptor],
                  header: HeaderRowDescriptor=None,
@@ -111,7 +99,7 @@ class FileDescriptor(object):
         self.footer = footer
         self.details = details
         self.validate_sizes()
-        self._line_size = self.details[0].line_size
+        self.line_size = self.details[0].line_size
 
     def validate_sizes(self):
         h = self.header.line_size if self.header else 0
@@ -121,31 +109,3 @@ class FileDescriptor(object):
         s = sum(ln)
         assert (s == d * len(self.details)) and (d == h or h == 0) and (d == f or f == 0), \
             'O tamanho das linhas header (%d), footer (%d) e das details (%s) devem ser iguais' % (h, f, ln)
-
-    # def dehydrate(self):
-    #     return {
-    #         "type": get_full_class_name(self),
-    #         "args": {
-    #             'details': [detail.dehydrate() for detail in self.details],
-    #             'header': self.header.dehydrate(),
-    #             'footer': self.footer.dehydrate()
-    #         }
-    #     }
-    #
-    # @classmethod
-    # def hydrate(cls, representation: Dict):
-    #
-    #     r = representation
-    #     assert isinstance(r['type'], str), 'type não é str'
-    #     assert 'args' in r and isinstance(r['args'], List), 'faltou details no representation ou não é um List'
-    #     assert 'details' in r and isinstance(r['details'], List), 'faltou details no representation ou não é um List'
-    #     assert 'header' in r, 'faltou header no representation '
-    #     assert isinstance(r['header'], List), 'o header não é um List'
-    #     assert 'footer' in r, 'faltou footer no representation '
-    #     assert isinstance(r['footer'], List), 'o footer não é um List'
-    #
-    #     details = [DetailRowDescriptor.hydrate(d) for d in r['details']]
-    #     header = HeaderRowDescriptor.hydrate(r['header']) if r['header'] else None
-    #     footer = FooterRowDescriptor.hydrate(r['footer']) if r['footer'] else None
-    #
-    #     print(details, header, footer)
