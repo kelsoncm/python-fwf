@@ -52,9 +52,9 @@ setup(
 
 __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
-# os.system("git add setup.py")
-# os.system("git commit -m 'Release %s'" % args.version)
-# os.system("git tag %s" % args.version)
-# os.system("git push --tags origin master")
+os.system("git add setup.py")
+os.system("git commit -m 'Release %s'" % args.version)
+os.system("git tag %s" % args.version)
+os.system("git push --tags origin master")
 os.system("python setup.py sdist")
-# os.system("twine upload dist/fwf-%s.tar.gz" % args.version)
+os.system("twine upload dist/fwf-%s.tar.gz" % args.version)
