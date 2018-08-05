@@ -6,8 +6,8 @@ __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 setup(
     name='pyfwf',
     packages=['pyfwf',],
-    version='0.1.2',
-    download_url='https://github.com/kelsoncm/pyfwf/releases/tag/0.1.2',
+    version='0.1.3',
+    download_url='https://github.com/kelsoncm/pyfwf/releases/tag/0.1.3',
     description='Python library to manipulate fixed width file',
     author='Kelson da Costa Medeiros',
     author_email='kelsoncm@gmail.com',
