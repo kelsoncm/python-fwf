@@ -103,7 +103,7 @@ class FileDescriptor(Hydrator):
 
     def validate_sizes(self):
         h = self.header.line_size if self.header else 0
-        f = self.footer.line_size if self.header else 0
+        f = self.footer.line_size if self.footer else 0
         d = self.details[0].line_size
         ln = [x.line_size for x in self.details]
         s = sum(ln)

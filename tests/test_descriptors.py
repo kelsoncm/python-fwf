@@ -53,43 +53,6 @@ class TestRowDescriptor(TestCase):
         self.assertRaisesRegex(AssertionError, 'columns.*1.*', RowDescriptor, [])
         self.assertRaisesRegex(AssertionError, 'columns.*List', RowDescriptor, 1)
 
-    # def test_dehydrate(self):
-    #     self.assertListEqual(
-    #         [{'type': 'pyfwf.columns.CharColumn',
-    #           'attributes': {'name': 'a_char', 'size': 1, 'description': 'a_char'}}],
-    #         RowDescriptor([CharColumn("a_char", 1), ]).dehydrate()
-    #     )
-    #     self.assertListEqual(
-    #         [{'type': 'pyfwf.columns.RightCharColumn',
-    #           'attributes': {'name': 'a_rchar', 'size': 10, 'description': 'a_rchar'}}],
-    #         RowDescriptor([RightCharColumn("a_rchar", 10)]).dehydrate()
-    #     )
-    #     self.assertListEqual(
-    #         [{'type': 'pyfwf.columns.PositiveIntegerColumn',
-    #           'attributes': {'name': 'a_int', 'size': 20, 'description': 'a_int'}}],
-    #         RowDescriptor([PositiveIntegerColumn("a_int", 20)]).dehydrate()
-    #     )
-    #     self.assertListEqual(
-    #         [{'type': 'pyfwf.columns.PositiveDecimalColumn',
-    #           'attributes': {'name': 'a_float', 'size': 30, 'decimals': 2, 'description': 'a_float'}}],
-    #         RowDescriptor([PositiveDecimalColumn("a_float", 30)]).dehydrate()
-    #     )
-    #     self.assertListEqual(
-    #         [{'type': 'pyfwf.columns.DateTimeColumn',
-    #           'attributes': {'name': 'a_datetime', 'format': '%d%m%Y%H%M', 'description': 'a_datetime'}}],
-    #         RowDescriptor([DateTimeColumn("a_datetime")]).dehydrate()
-    #     )
-    #     self.assertListEqual(
-    #         [{'type': 'pyfwf.columns.DateColumn',
-    #           'attributes': {'name': 'a_date', 'format': '%d%m%Y', 'description': 'a_date'}}],
-    #         RowDescriptor([DateColumn("a_date")]).dehydrate()
-    #     )
-    #     self.assertListEqual(
-    #         [{'type': 'pyfwf.columns.TimeColumn',
-    #           'attributes': {'name': 'a_time', 'format': '%H%M', 'description': 'a_time'}}],
-    #         RowDescriptor([TimeColumn("a_time")]).dehydrate()
-    #     )
-
 
 class TestHeaderRowDescriptor(TestCase):
 
@@ -188,6 +151,8 @@ class TestFileDescriptor(TestCase):
     def test_constructor_all_right(self):
         f = CharColumn("type", 1)
         self.assertIsInstance(FileDescriptor([DetailRowDescriptor([f])]), FileDescriptor)
+        self.assertIsInstance(FileDescriptor([DetailRowDescriptor([f])],
+                                             HeaderRowDescriptor([f])), FileDescriptor)
         self.assertIsInstance(FileDescriptor([DetailRowDescriptor([f])],
                                              HeaderRowDescriptor([f]),
                                              FooterRowDescriptor([f])), FileDescriptor)
