@@ -40,14 +40,14 @@ class WeCanTest(Hydrator):
 
 class TestFunctionGetFullClassName(TestCase):
     def test_get_full_class_name(self):
-        classname = "test_hydrating.TestFunctionGetFullClassName"
+        classname = "tests.test_hydrating.TestFunctionGetFullClassName"
         self.assertEqual(classname, get_full_class_name(TestFunctionGetFullClassName))
         self.assertEqual(classname, get_full_class_name(self))
 
 
 class TestFunctionHydrate(TestCase):
     def test_hydrate_object(self):
-        self.assertIsInstance(hydrate_object({'_hydrate_as': 'test_hydrating.WeCanTest'}), WeCanTest)
+        self.assertIsInstance(hydrate_object({'_hydrate_as': 'tests.test_hydrating.WeCanTest'}), WeCanTest)
 
     def test_hydrate_wrong_args__empty(self):
         self.assertRaisesRegex(TypeError, 'missing 1', hydrate_object)
@@ -62,74 +62,74 @@ class TestFunctionHydrate(TestCase):
         self.assertRaisesRegex(AssertionError, '_hydrate_as has informed.*str', hydrate_object, {'_hydrate_as': 1})
 
     def test_hydrate_wrong_args__type_not_exists(self):
-        self.assertRaisesRegex(AttributeError, 'test_hydrating.*WeCanTest2', hydrate_object,
-                               {'_hydrate_as': 'test_hydrating.WeCanTest2'})
+        self.assertRaisesRegex(AttributeError, 'tests.test_hydrating.*WeCanTest2', hydrate_object,
+                               {'_hydrate_as': 'tests.test_hydrating.WeCanTest2'})
 
     def test_hydrate_wrong_args__args_not_list(self):
         self.assertRaisesRegex(AssertionError, 'args.*List', hydrate_object,
-                               {'_hydrate_as': 'test_hydrating.WeCanTest', 'args': None})
+                               {'_hydrate_as': 'tests.test_hydrating.WeCanTest', 'args': None})
 
     def test_hydrate_wrong_args__kwargs_not_dict(self):
         self.assertRaisesRegex(AssertionError, 'kwargs.*Dict', hydrate_object,
-                               {'_hydrate_as': 'test_hydrating.WeCanTest', 'kwargs': None})
+                               {'_hydrate_as': 'tests.test_hydrating.WeCanTest', 'kwargs': None})
 
     def test_hydrate_wrong_args__attributes_not_dict(self):
         self.assertRaisesRegex(AssertionError, 'attributes.*Dict', hydrate_object,
-                               {'_hydrate_as': 'test_hydrating.WeCanTest', 'attributes': None})
+                               {'_hydrate_as': 'tests.test_hydrating.WeCanTest', 'attributes': None})
 
     def test_hydrate_let_args__args(self):
-        instance = hydrate_object({'_hydrate_as': 'test_hydrating.WeCanTest', 'args': ['nested', 'me', 12]})
+        instance = hydrate_object({'_hydrate_as': 'tests.test_hydrating.WeCanTest', 'args': ['nested', 'me', 12]})
         self.assertEqual(instance.nested, 'nested')
         self.assertListEqual(instance.args, ['me', 12])
 
     def test_hydrate_let_args__kwargs(self):
-        instance = hydrate_object({'_hydrate_as': 'test_hydrating.WeCanTest', 'kwargs': {'test': 'me', 'age': 12}})
+        instance = hydrate_object({'_hydrate_as': 'tests.test_hydrating.WeCanTest', 'kwargs': {'test': 'me', 'age': 12}})
         self.assertDictEqual(instance.kwargs, {'test': 'me', 'age': 12})
 
     def test_hydrate_let_args__attrs(self):
-        instance = hydrate_object({'_hydrate_as': 'test_hydrating.WeCanTest', 'attributes': {'test': 'me', 'age': 12}})
+        instance = hydrate_object({'_hydrate_as': 'tests.test_hydrating.WeCanTest', 'attributes': {'test': 'me', 'age': 12}})
         self.assertEqual(instance.test, 'me')
         self.assertEqual(instance.age, 12)
 
 
 class TestFunctionDehydrate(TestCase):
     def test_dehydrate_object(self):
-        self.assertDictEqual({'_hydrate_as': 'test_hydrating.WeCanTest'}, dehydrate_object(WeCanTest()))
+        self.assertDictEqual({'_hydrate_as': 'tests.test_hydrating.WeCanTest'}, dehydrate_object(WeCanTest()))
 
     def test_dehydrate_object__kwargs(self):
         o1 = WeCanTest()
         o1.hydrating_kwargs = ['who']
         o1.who = 'me'
-        self.assertDictEqual({'_hydrate_as': 'test_hydrating.WeCanTest', 'kwargs': {'who': 'me'}},
+        self.assertDictEqual({'_hydrate_as': 'tests.test_hydrating.WeCanTest', 'kwargs': {'who': 'me'}},
                              dehydrate_object(o1))
 
         o2 = WeCanTest()
         o2.hydrating_kwargs = ['nested']
-        self.assertDictEqual({'_hydrate_as': 'test_hydrating.WeCanTest', 'kwargs': {'nested': None}},
+        self.assertDictEqual({'_hydrate_as': 'tests.test_hydrating.WeCanTest', 'kwargs': {'nested': None}},
                              dehydrate_object(o2))
 
         o3 = WeCanTest()
         o3.hydrating_kwargs = ['nested']
         o3.nested = o1
-        self.assertDictEqual({'_hydrate_as': 'test_hydrating.WeCanTest',
+        self.assertDictEqual({'_hydrate_as': 'tests.test_hydrating.WeCanTest',
                               'kwargs': {
-                                  'nested': {'_hydrate_as': 'test_hydrating.WeCanTest', 'kwargs': {'who': 'me'}}
+                                  'nested': {'_hydrate_as': 'tests.test_hydrating.WeCanTest', 'kwargs': {'who': 'me'}}
                               }
                               }, dehydrate_object(o3))
 
         o4 = WeCanTest()
         o4.hydrating_args = ['nested']
         o4.nested = o1
-        self.assertDictEqual({'_hydrate_as': 'test_hydrating.WeCanTest',
-                              'args': [{'_hydrate_as': 'test_hydrating.WeCanTest', 'kwargs': {'who': 'me'}}]
+        self.assertDictEqual({'_hydrate_as': 'tests.test_hydrating.WeCanTest',
+                              'args': [{'_hydrate_as': 'tests.test_hydrating.WeCanTest', 'kwargs': {'who': 'me'}}]
                               }, dehydrate_object(o4))
 
         o5 = WeCanTest()
         o5.hydrating_attributes = ['nested']
         o5.nested = o1
-        self.assertDictEqual({'_hydrate_as': 'test_hydrating.WeCanTest',
+        self.assertDictEqual({'_hydrate_as': 'tests.test_hydrating.WeCanTest',
                               'attributes': {
-                                  'nested': {'_hydrate_as': 'test_hydrating.WeCanTest', 'kwargs': {'who': 'me'}}
+                                  'nested': {'_hydrate_as': 'tests.test_hydrating.WeCanTest', 'kwargs': {'who': 'me'}}
                               }
                               }, dehydrate_object(o5))
 
@@ -139,11 +139,11 @@ class TestHydrator(TestCase):
         self.assertRaisesRegex(TypeError, 'missing 1', Hydrator.hydrate)
 
     def test_hydrate__minimal(self):
-        representation = {'_hydrate_as': 'test_hydrating.WeCanTest'}
+        representation = {'_hydrate_as': 'tests.test_hydrating.WeCanTest'}
         self.assertIsInstance(Hydrator.hydrate(representation), Hydrator)
 
     def test_hydrate_let__attributes(self):
-        representation = {'_hydrate_as': 'test_hydrating.WeCanTest',
+        representation = {'_hydrate_as': 'tests.test_hydrating.WeCanTest',
                           'attributes': {'test': 'me', 'age': 12}}
         instance = Hydrator.hydrate(representation)
         self.assertEqual(instance.test, 'me')
@@ -151,10 +151,9 @@ class TestHydrator(TestCase):
 
     def test_hydrate_let__nested(self):
         representation = {
-            '_hydrate_as': 'test_hydrating.WeCanTest',
-            'args': [{'_hydrate_as': 'test_hydrating.WeCanTest'}, 'me', 12]
+            '_hydrate_as': 'tests.test_hydrating.WeCanTest',
+            'args': [{'_hydrate_as': 'tests.test_hydrating.WeCanTest'}, 'me', 12]
         }
         instance = Hydrator.hydrate(representation)
         self.assertEqual(instance.args, ['me', 12])
         self.assertIsInstance(instance.nested, WeCanTest)
-        print(instance)

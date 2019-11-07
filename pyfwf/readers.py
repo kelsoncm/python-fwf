@@ -28,7 +28,7 @@ __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 from typing import Iterable, List
 from io import StringIO, TextIOWrapper
 from .descriptors import FileDescriptor
-import collections
+from collections import abc
 
 
 __all__ = ['Reader']
@@ -37,7 +37,7 @@ __all__ = ['Reader']
 class Reader:
 
     def __init__(self, _iterable: Iterable[str], file_descriptor: FileDescriptor, newline: str="\n\r"):
-        assert isinstance(_iterable, collections.Iterable), \
+        assert isinstance(_iterable, abc.Iterable), \
             'O argumento _iterable tem que ser um Iterator'
         assert isinstance(file_descriptor, FileDescriptor), \
             'O argumento file_descriptor tem que ser um FileDescriptor'

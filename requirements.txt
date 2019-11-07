@@ -21,3 +21,5 @@
 #
 # @author 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
+coverage==4.5.4
+twine==2.0.0

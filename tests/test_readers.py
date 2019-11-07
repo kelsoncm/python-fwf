@@ -63,15 +63,15 @@ class TestReader(TestCase):
                 CharColumn('fill', 154),
             ]),
         )
-        with open('assets/example01.json') as f:
+        with open('/src/tests/assets/example01.json') as f:
             self.example01_json = f.read()
-        with open('assets/example01.md') as f:
+        with open('/src/tests/assets/example01.md') as f:
             self.example01_markdown = f.read()
-        with open('assets/example01_wrong_line_size.fwf') as f:
+        with open('/src/tests/assets/example01_wrong_line_size.fwf') as f:
             self.example01_wrong_line_size = f.read()
-        with open('assets/example01_are_right.fwf') as f:
+        with open('/src/tests/assets/example01_are_right.fwf') as f:
             self.example01_are_right = f.read()
-        with open('assets/example01_are_right_win.fwf') as f:
+        with open('/src/tests/assets/example01_are_right_win.fwf') as f:
             self.example01_are_right_win = f.read()
         self.example01_are_right_lst = [
             "1FWF                                                                              "
@@ -124,7 +124,7 @@ class TestReader(TestCase):
 
     def test_validate_file_structure__are_right_file(self):
         self.assertEqual(4, Reader(self.example01_are_right, self.file_descriptor, "\n").lines_count)
-        with open('assets/example01_are_right.fwf') as f:
+        with open('/src/tests/assets/example01_are_right.fwf') as f:
             self.assertEqual(4, Reader(f, self.file_descriptor, "\n").lines_count)
         self.assertEqual(4, Reader(self.example01_are_right, self.file_descriptor, "\n").lines_count)
         self.assertEqual(4, Reader(self.example01_are_right_lst, self.file_descriptor, "\n").lines_count)

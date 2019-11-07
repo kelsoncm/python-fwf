@@ -140,9 +140,9 @@ class TestFileDescriptor(TestCase):
                 CharColumn('fill', 154),
             ]),
         )
-        with open('assets/example01.json') as f:
+        with open('/src/tests/assets/example01.json') as f:
             self.example01_json = f.read()
-        with open('assets/example01.md') as f:
+        with open('/src/tests/assets/example01.md') as f:
             self.example01_markdown = f.read()
 
     def test_constructor_empty(self):
@@ -247,9 +247,9 @@ class TestRenders(TestCase):
                 CharColumn('fill', 154),
             ]),
         )
-        with open('assets/example01.json') as f:
+        with open('/src/tests/assets/example01.json') as f:
             self.example01_json = f.read()
-        with open('assets/example01.md') as f:
+        with open('/src/tests/assets/example01.md') as f:
             self.example01_markdown = f.read()
 
     def test_render_as_markdown(self):
