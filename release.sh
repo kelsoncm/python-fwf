@@ -23,14 +23,14 @@
 PROJECT_NAME="pyfwf"
 FULL_IMAGE_NAME="kelsoncm/$PROJECT_NAME"
 
-if [[ $# -ne 2 ]] || [[ "$1" != "-l" && "$1" != "-p" && "$1" != "-r" && "$1" != "-a" ]]
+if [[ $# -ne 2 ]] || [[ "$1" != "-l" && "$1" != "-g" && "$1" != "-p" && "$1" != "-a" ]]
   then
 
   if [[ "$#" == 0 ]]
     then
     echo "ERROR: Chooce a option."
   else
-    if [[ "$1" != "-l" && "$1" != "-p" && "$1" != "-r" && "$1" != "-a" ]]
+    if [[ "$1" != "-l" && "$1" != "-g" && "$1" != "-p" && "$1" != "-a" ]]
       then
       echo "ERROR: Invalid option: $1."
     elif [[ "$#" == 1 ]]
@@ -43,22 +43,22 @@ if [[ $# -ne 2 ]] || [[ "$1" != "-l" && "$1" != "-p" && "$1" != "-r" && "$1" != 
 NAME
        release
 SYNOPSIS
-       ./release.sh [-l|-p|-r|-a] <version>
+       ./release.sh [-l|-g|-p|-a] <version>
 DESCRIPTION
        Create a new release $PROJECT_NAME image.
 OPTIONS
        -l         Build only locally
-       -p         Push to GitLab
-       -r         Registry on GitLab
+       -g         Push to GitLab
+       -p         Registry on GitLab
        -a         Push and registry on GitLab
        <version>  Release version number
 EXAMPLES
        o   Build a image to local usage only:
                   ./release.sh -b 1.0
        o   Build and push to GitHub:
-                  ./release.sh -p 1.0
+                  ./release.sh -g 1.0
        o   Build and registry on GitHub:
-                  ./release.sh -r 1.0
+                  ./release.sh -p 1.0
        o   Build, push and registry on GitHub:
                   ./release.sh -a 1.0
 LAST TAG: $(git tag| tail -1)"
@@ -72,7 +72,7 @@ __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 setup(
     name='$PROJECT_NAME',
     packages=['$PROJECT_NAME',],
-    version='%s',
+    version='$1',
     download_url='https://github.com/$FULL_IMAGE_NAME/releases/tag/$1',
     description='Python library to manipulate fixed width file',
     author='Kelson da Costa Medeiros',
@@ -86,13 +86,13 @@ setup(
     echo "Build local version $FULL_IMAGE_NAME $2"
     echo ""
     docker build -t $FULL_IMAGE_NAME:latest --force-rm .
-    docker run --rm -it -v `pwd`:/src $FULL_IMAGE_NAME:latest sh -c 'coverage run -m unittest tests/test_* && coverage report -m'
+    docker run --rm -it -v `pwd`:/src $FULL_IMAGE_NAME:latest sh -c 'coverage run -m unittest tests/test_* && coverage report -m && python setup.py sdist'
 
 }
 
 create_setup_cfg_file $2
 
-if [[ "$1" == "-p" || "$1" == "-a" ]]
+if [[ "$1" == "-g" || "$1" == "-a" ]]
 then
   echo ""
   echo "GitHub: Pushing"
@@ -103,7 +103,7 @@ then
   git push --tags origin master
 fi
 
-if [[ "$1" == "-r" || "$1" == "-a" ]]
+if [[ "$1" == "-p" || "$1" == "-a" ]]
 then
   echo ""
   echo "PyPI Hub: Uploading"
