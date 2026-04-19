@@ -49,12 +49,13 @@ def render_as_markdown(file_descriptor: FileDescriptor, out: StringIO):
             out.write(template.format(line, col.name, col.size, col.start, col.end, col.__class__.__name__,
                                       col.description))
 
-    def table(title, cols):
+    def table(title, cols, trailling=True):
         max_colname_size = max([len(col.name) for col in cols])
         max_coltype_size = max([len(col.__class__.__name__) for col in cols])
         table_header(title, max_colname_size, max_coltype_size)
         table_body(cols, max_colname_size, max_coltype_size)
-        out.write("\n\n\n")
+        if trailling:
+            out.write("\n\n")
 
     if file_descriptor.header:
         table("HEADER", file_descriptor.header.columns)
@@ -65,4 +66,4 @@ def render_as_markdown(file_descriptor: FileDescriptor, out: StringIO):
         detail_num += 1
 
     if file_descriptor.footer:
-        table("FOOTER", file_descriptor.footer.columns)
+        table("FOOTER", file_descriptor.footer.columns, False)

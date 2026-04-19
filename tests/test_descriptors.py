@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 __author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
-import json, io
+import json, io, os
 from unittest import TestCase
 from pyfwf.columns import CharColumn, RightCharColumn, PositiveIntegerColumn, PositiveDecimalColumn, \
     DateTimeColumn, DateColumn, TimeColumn
@@ -140,9 +140,10 @@ class TestFileDescriptor(TestCase):
                 CharColumn('fill', 154),
             ]),
         )
-        with open('/src/tests/assets/example01.json') as f:
+        assets_dir = os.path.join(os.path.dirname(__file__), 'assets')
+        with open(os.path.join(assets_dir, 'example01.json')) as f:
             self.example01_json = f.read()
-        with open('/src/tests/assets/example01.md') as f:
+        with open(os.path.join(assets_dir, 'example01.md')) as f:
             self.example01_markdown = f.read()
 
     def test_constructor_empty(self):
@@ -247,12 +248,14 @@ class TestRenders(TestCase):
                 CharColumn('fill', 154),
             ]),
         )
-        with open('/src/tests/assets/example01.json') as f:
+        assets_dir = os.path.join(os.path.dirname(__file__), 'assets')
+        with open(os.path.join(assets_dir, 'example01.json')) as f:
             self.example01_json = f.read()
-        with open('/src/tests/assets/example01.md') as f:
+        with open(os.path.join(assets_dir, 'example01.md')) as f:  # UTF-8!
             self.example01_markdown = f.read()
 
     def test_render_as_markdown(self):
         with io.StringIO() as buf:
             render_as_markdown(self.file_descriptor, buf)
-            self.assertEqual(self.example01_markdown, buf.getvalue())
+            values = buf.getvalue()
+            self.assertEqual(self.example01_markdown, values)
