@@ -1,12 +1,11 @@
 # Python FWF
 
-[![PyPI Version](https://img.shields.io/pypi/v/python-fwf)](https://pypi.org/project/python-fwf/)
-[![Python CI and PyPI Deploy](https://github.com/kelsoncm/python-fwf/actions/workflows/publish.yml/badge.svg)](https://github.com/kelsoncm/python-fwf/actions/workflows/publish.yml)
-[![Python Versions](https://img.shields.io/pypi/pyversions/python-fwf.svg)](https://pypi.org/project/python-fwf/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/pypi/pyversions/pyfwf.svg)](https://pypi.org/project/pyfwf/)
+[![PyPI Deploy](https://github.com/kelsoncm/python-fwf/actions/workflows/publish.yml/badge.svg)](https://github.com/kelsoncm/python-fwf/actions/workflows/publish.yml)
 [![Tests](https://github.com/kelsoncm/python-fwf/actions/workflows/test.yml/badge.svg)](https://github.com/kelsoncm/python-fwf/actions/workflows/test.yml)
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 [![Coverage](https://codecov.io/gh/kelsoncm/python-fwf/branch/main/graph/badge.svg)](https://codecov.io/gh/kelsoncm/python-fwf)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 
 
 Python library for reading and manipulating **fixed-width files (FWF)**.
