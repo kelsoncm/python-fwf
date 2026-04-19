@@ -3,7 +3,6 @@
 [![PyPI Version](https://img.shields.io/pypi/v/python-fwf)](https://pypi.org/project/python-fwf/)
 [![Python CI and PyPI Deploy](https://github.com/kelsoncm/python-fwf/actions/workflows/publish.yml/badge.svg)](https://github.com/kelsoncm/python-fwf/actions/workflows/publish.yml)
 [![Python Versions](https://img.shields.io/pypi/pyversions/python-fwf.svg)](https://pypi.org/project/python-fwf/)
-[![Django Versions](https://img.shields.io/badge/django-5.2%20|%206.0-blue)](https://www.djangoproject.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tests](https://github.com/kelsoncm/python-fwf/actions/workflows/test.yml/badge.svg)](https://github.com/kelsoncm/python-fwf/actions/workflows/test.yml)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
