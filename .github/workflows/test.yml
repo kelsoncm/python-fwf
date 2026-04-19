@@ -32,7 +32,7 @@ jobs:
           pip install -e ".[dev]"
 
       - name: Run tests
-        run: pytest --cov=fwf --cov-report=xml --cov-fail-under=100
+        run: pytest --cov=pyfwf --cov-report=xml --cov-fail-under=100
 
       - name: Upload coverage to Codecov
         if: ${{ !matrix.experimental }}
