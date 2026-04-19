@@ -66,7 +66,7 @@ class TestDehydrateWithAttributes(TestCase):
 
     def test_dehydrate_with_attributes_hydrator(self):
         """Test dehydration with Hydrator object attributes"""
-        from tests.test_hydrating import WeCanTest
+        from test_hydrating import WeCanTest
 
         obj = WeCanTest()
         obj.hydrating_attributes = ['nested']
