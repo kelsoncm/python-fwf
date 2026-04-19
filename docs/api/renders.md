@@ -23,10 +23,10 @@ Renders a `FileDescriptor` as a Markdown table, one section per row type (HEADER
 render_as_markdown(file_descriptor: FileDescriptor, out: StringIO) -> None
 ```
 
-| Argument | Type | Description |
-|---|---|---|
-| `file_descriptor` | `FileDescriptor` | The layout to render |
-| `out` | `StringIO` | Output buffer to write the Markdown into |
+| Argument          | Type             | Description                              |
+|-------------------|------------------|------------------------------------------|
+| `file_descriptor` | `FileDescriptor` | The layout to render                     |
+| `out`             | `StringIO`       | Output buffer to write the Markdown into |
 
 The function writes directly to `out` and returns `None`.
 
