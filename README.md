@@ -1,28 +1,62 @@
-# Python Bacth File Processor
+# Python FWF
 
+Python library for reading and manipulating **fixed-width files (FWF)**.
 
+## Features
 
-# LICENSE
+- 📖 Read fixed-width format files with custom column definitions
+- 🔧 Support for typed columns (integer, decimal, date, time, etc.)
+- 📋 Header and footer row handling
+- 🎯 Simple and intuitive API
+- ✅ Fully tested (100% coverage)
 
-The MIT License (MIT)
+## Installation
 
-Copyright (c) 2015 kelsoncm
+```bash
+pip install pyfwf
+```
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+## Quick Start
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+```python
+from pyfwf.columns import CharColumn, PositiveIntegerColumn
+from pyfwf.descriptors import DetailRowDescriptor, FileDescriptor
+from pyfwf.readers import Reader
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+# Define columns
+detail = DetailRowDescriptor([
+    CharColumn(name='name', pos=1, size=20),
+    PositiveIntegerColumn(name='age', pos=21, size=3),
+])
 
+# Create file descriptor
+fd = FileDescriptor(line_size=23, details=[detail])
+
+# Read file
+with open('data.fwf', 'r') as f:
+    reader = Reader(f, fd)
+    for row in reader:
+        print(row)
+```
+
+## Supported Column Types
+
+- `CharColumn` - Text data
+- `RightCharColumn` - Right-aligned text
+- `PositiveIntegerColumn` - Positive integers
+- `PositiveDecimalColumn` - Decimal numbers
+- `DateColumn` - Date values
+- `TimeColumn` - Time values
+- `DateTimeColumn` - DateTime values
+
+## Documentation
+
+See [docs/](docs/) for detailed documentation and examples.
+
+## License
+
+MIT License © 2015 Umbrella Tech
+
+## Author
+
+Kelson da Costa Medeiros <kelsoncm@gmail.com>
