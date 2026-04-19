@@ -65,4 +65,4 @@ def render_as_markdown(file_descriptor: FileDescriptor, out: StringIO):
         detail_num += 1
 
     if file_descriptor.footer:
-        table("FOOTER", file_descriptor.header.columns)
+        table("FOOTER", file_descriptor.footer.columns)
