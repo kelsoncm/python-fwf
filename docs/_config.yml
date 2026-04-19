@@ -1,6 +1,6 @@
 ﻿title: pyfwf
 description: Python library for reading and manipulating fixed-width files (FWF)
-remote_theme: just-the-docs/just-the-docs
+theme: just-the-docs
 
 url: https://kelsoncm.github.io
 baseurl: /python-fwf
@@ -18,4 +18,4 @@ nav_sort: case_insensitive
 footer_content: "MIT License &copy; 2015 Umbrella Tech &mdash; Kelson da Costa Medeiros"
 
 plugins:
-  - jekyll-remote-theme
+  - jekyll-seo-tag
