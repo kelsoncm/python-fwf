@@ -46,7 +46,7 @@ repos:
       - id: pytest-coverage-gate
         name: pytest-coverage-gate
         stages: [pre-push]
-        entry: C:/Users/2080882/projetos/PESSOAL/python-pyfwf/.venv/Scripts/python.exe -m pytest_coverage_gate --coverage-xml=coverage.xml --baseline=.coverage-baseline
-        language: system
+        entry: python -m pytest_coverage_gate --coverage-xml=coverage.xml --baseline=.coverage-baseline
+        language: python
         pass_filenames: false
         always_run: true
