@@ -63,3 +63,9 @@ include = ["pyfwf"]
 [tool.black]
 line-length = 120
 exclude = '\\.fwf$'
+
+[tool.flake8]
+ignore = ["E203"]
+max-line-length = 127
+max-complexity = 5
+select = ["E9", "F63", "F7", "F82", "S"]
