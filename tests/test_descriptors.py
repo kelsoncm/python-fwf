@@ -281,9 +281,10 @@ class TestRenders(TestCase):
             self.example01_json = f.read()
         with open(os.path.join(assets_dir, "example01.md")) as f:  # UTF-8!
             self.example01_markdown = f.read()
+        self.maxDiff = None
 
     def test_render_as_markdown(self):
         with io.StringIO() as buf:
             render_as_markdown(self.file_descriptor, buf)
-            values = buf.getvalue()
-            self.assertEqual(self.example01_markdown, values)
+            # print(buf.getvalue()) # Teste com `pytest -s tests/test_descriptors.py`
+            self.assertEqual(self.example01_markdown, buf.getvalue())
