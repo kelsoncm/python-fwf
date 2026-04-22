@@ -60,5 +60,5 @@ include = ["pyfwf"]
 [tool.black]
 line-length = 120
     exclude = '''
-    (\\.fwf$|tests/assets/example01\\.rst)
+    (\\.fwf$)
     '''

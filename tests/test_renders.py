@@ -67,7 +67,7 @@ class TestRenders(TestCase):
             self.example01_json = f.read()
         with open(os.path.join(assets_dir, "example01.md")) as f:
             self.example01_markdown = f.read()
-        with open(os.path.join(assets_dir, "example01.rst")) as f:
+        with open(os.path.join(assets_dir, "example01.rst.example")) as f:
             self.example01_rst = f.read()
         with open(os.path.join(assets_dir, "example01.html")) as f:
             self.example01_html = f.read()
