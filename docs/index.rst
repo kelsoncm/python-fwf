@@ -1,5 +1,5 @@
-pyfwf
-=====
+Home
+====
 
 Python library for reading and manipulating **fixed-width files (FWF)**.
 
@@ -77,9 +77,10 @@ Next steps
 .. toctree::
    :maxdepth: 2
 
+   index
    getting-started
-   api-columns
    api-descriptors
+   api-columns
    api-readers
    api-renders
    api-hydrating
