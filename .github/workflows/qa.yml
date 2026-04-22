@@ -21,10 +21,10 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.14
         uses: actions/setup-python@v6
         with:
-          python-version: "3.11"
+          python-version: "3.14"
 
       - name: Install quality dependencies
         run: |
@@ -99,29 +99,3 @@ jobs:
           files: coverage.xml
           flags: sc4py,py${{ matrix.python-version }}
           fail_ci_if_error: false
-
-      - name: Publish coverage summary
-        run: |
-          python - <<'PY'
-          import xml.etree.ElementTree as ET
-          import os
-
-          root = ET.parse("coverage.xml").getroot()
-          cov = round(float(root.attrib.get("line-rate", 0.0)) * 100, 2)
-          py_version = os.environ.get("PY_VERSION", "unknown")
-
-          summary = "\n".join(
-              [
-                  f"## Coverage Summary (Python {py_version})",
-                  "",
-                  "| Package | Line Coverage |",
-                  "|---|---:|",
-                  f"| sc4py | {cov:.2f}% |",
-              ]
-          )
-
-          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as fp:
-              fp.write(summary + "\n")
-          PY
-        env:
-          PY_VERSION: ${{ matrix.python-version }}
