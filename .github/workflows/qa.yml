@@ -41,6 +41,10 @@ jobs:
       - name: Lint Markdown
         uses: DavidAnson/markdownlint-cli2-action@v20
 
+      - name: Lint reStructuredText (doc8)
+        run: |
+          doc8 docs --max-line-length=120
+
       - name: Run Semgrep SAST
         if: github.event_name == 'pull_request' || github.event_name == 'schedule'
         uses: semgrep/semgrep-action@v1

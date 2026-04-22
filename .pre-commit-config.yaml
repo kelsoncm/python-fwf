@@ -28,6 +28,12 @@ repos:
         args: [--fix]
         exclude: \.fwf$
 
+  - repo: https://github.com/PyCQA/doc8
+    rev: v2.0.0
+    hooks:
+      - id: doc8
+        args: ["--max-line-length=120"]
+
   - repo: local
     hooks:
       - id: pytest
