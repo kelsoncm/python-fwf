@@ -21,25 +21,37 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-__author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
+__author__ = "Kelson da Costa Medeiros <kelsoncm@gmail.com>"
 
-import json, io, os
+import io
+import os
 from unittest import TestCase
-from pyfwf.columns import CharColumn, RightCharColumn, PositiveIntegerColumn, PositiveDecimalColumn, \
-    DateTimeColumn, DateColumn, TimeColumn
-from pyfwf.descriptors import RowDescriptor, HeaderRowDescriptor, \
-    FooterRowDescriptor, DetailRowDescriptor, FileDescriptor
+
+from pyfwf.columns import (
+    CharColumn,
+    DateColumn,
+    DateTimeColumn,
+    PositiveDecimalColumn,
+    PositiveIntegerColumn,
+    RightCharColumn,
+    TimeColumn,
+)
+from pyfwf.descriptors import (
+    DetailRowDescriptor,
+    FileDescriptor,
+    FooterRowDescriptor,
+    HeaderRowDescriptor,
+    RowDescriptor,
+)
 from pyfwf.renders import render_as_markdown
 
 
 class TestRowDescriptor(TestCase):
-
     def test_constructor_empty(self):
-        self.assertRaisesRegex(TypeError, 'missing 1', RowDescriptor)
+        self.assertRaisesRegex(TypeError, "missing 1", RowDescriptor)
 
     def test_constructor_all_right(self):
-        self.assertIsInstance(RowDescriptor([CharColumn("type", 1),
-                                             CharColumn("type", 1)]), RowDescriptor)
+        self.assertIsInstance(RowDescriptor([CharColumn("type", 1), CharColumn("type", 1)]), RowDescriptor)
 
     def test_constructor_set_attr(self):
         rd = RowDescriptor([CharColumn("type", 1), CharColumn("name", 10)])
@@ -48,16 +60,15 @@ class TestRowDescriptor(TestCase):
         self.assertEqual(11, rd.line_size)
 
     def test_constructor_wrong_args(self):
-        self.assertRaisesRegex(TypeError, 'missing.*columns', RowDescriptor)
-        self.assertRaisesRegex(AssertionError, 'columns.*List', RowDescriptor, None)
-        self.assertRaisesRegex(AssertionError, 'columns.*1.*', RowDescriptor, [])
-        self.assertRaisesRegex(AssertionError, 'columns.*List', RowDescriptor, 1)
+        self.assertRaisesRegex(TypeError, "missing.*columns", RowDescriptor)
+        self.assertRaisesRegex(AssertionError, "columns.*List", RowDescriptor, None)
+        self.assertRaisesRegex(AssertionError, "columns.*1.*", RowDescriptor, [])
+        self.assertRaisesRegex(AssertionError, "columns.*List", RowDescriptor, 1)
 
 
 class TestHeaderRowDescriptor(TestCase):
-
     def test_constructor_empty(self):
-        self.assertRaisesRegex(TypeError, 'missing 1', HeaderRowDescriptor)
+        self.assertRaisesRegex(TypeError, "missing 1", HeaderRowDescriptor)
 
     def test_constructor_all_right(self):
         self.assertIsInstance(HeaderRowDescriptor([CharColumn("type", 1)]), HeaderRowDescriptor)
@@ -68,16 +79,15 @@ class TestHeaderRowDescriptor(TestCase):
         self.assertEqual(1, len(rd.columns))
 
     def test_constructor_wrong_args(self):
-        self.assertRaisesRegex(TypeError, 'missing.*columns', HeaderRowDescriptor)
-        self.assertRaisesRegex(AssertionError, 'columns.*1.*', HeaderRowDescriptor, [])
-        self.assertRaisesRegex(AssertionError, 'columns.*List', HeaderRowDescriptor, None)
-        self.assertRaisesRegex(AssertionError, 'columns.*List', HeaderRowDescriptor, 1)
+        self.assertRaisesRegex(TypeError, "missing.*columns", HeaderRowDescriptor)
+        self.assertRaisesRegex(AssertionError, "columns.*1.*", HeaderRowDescriptor, [])
+        self.assertRaisesRegex(AssertionError, "columns.*List", HeaderRowDescriptor, None)
+        self.assertRaisesRegex(AssertionError, "columns.*List", HeaderRowDescriptor, 1)
 
 
 class TestFooterRowDescriptor(TestCase):
-
     def test_constructor_empty(self):
-        self.assertRaisesRegex(TypeError, 'missing 1', FooterRowDescriptor)
+        self.assertRaisesRegex(TypeError, "missing 1", FooterRowDescriptor)
 
     def test_constructor_all_right(self):
         self.assertIsInstance(FooterRowDescriptor([CharColumn("type", 1)]), FooterRowDescriptor)
@@ -88,16 +98,15 @@ class TestFooterRowDescriptor(TestCase):
         self.assertEqual(2, len(rd.columns))
 
     def test_constructor_wrong_args(self):
-        self.assertRaisesRegex(TypeError, 'missing.*columns', FooterRowDescriptor)
-        self.assertRaisesRegex(AssertionError, 'columns.*1.*', FooterRowDescriptor, [])
-        self.assertRaisesRegex(AssertionError, 'columns.*List', FooterRowDescriptor, None)
-        self.assertRaisesRegex(AssertionError, 'columns.*List', FooterRowDescriptor, 1)
+        self.assertRaisesRegex(TypeError, "missing.*columns", FooterRowDescriptor)
+        self.assertRaisesRegex(AssertionError, "columns.*1.*", FooterRowDescriptor, [])
+        self.assertRaisesRegex(AssertionError, "columns.*List", FooterRowDescriptor, None)
+        self.assertRaisesRegex(AssertionError, "columns.*List", FooterRowDescriptor, 1)
 
 
 class TestDetailRowDescriptor(TestCase):
-
     def test_constructor_empty(self):
-        self.assertRaisesRegex(TypeError, 'missing 1', DetailRowDescriptor)
+        self.assertRaisesRegex(TypeError, "missing 1", DetailRowDescriptor)
 
     def test_constructor_all_right(self):
         self.assertIsInstance(DetailRowDescriptor([CharColumn("type", 1)]), DetailRowDescriptor)
@@ -108,87 +117,101 @@ class TestDetailRowDescriptor(TestCase):
         self.assertEqual(1, len(rd.columns))
 
     def test_constructor_wrong_args(self):
-        self.assertRaisesRegex(AssertionError, 'columns.*1.*', DetailRowDescriptor, [])
-        self.assertRaisesRegex(AssertionError, 'columns.*List', DetailRowDescriptor, 1)
+        self.assertRaisesRegex(AssertionError, "columns.*1.*", DetailRowDescriptor, [])
+        self.assertRaisesRegex(AssertionError, "columns.*List", DetailRowDescriptor, 1)
 
 
 class TestFileDescriptor(TestCase):
-
     def setUp(self):
         self.file_descriptor = FileDescriptor(
             [
-                DetailRowDescriptor([
-                    CharColumn('row_type', 1),
-                    CharColumn('name', 60),
-                    RightCharColumn('right_name', 60),
-                    PositiveIntegerColumn('positive_interger', 9),
-                    PositiveDecimalColumn('positive_decimal', 9),
-                    DateTimeColumn('datetime'),
-                    DateColumn('date'),
-                    TimeColumn('time'),
-                ])
+                DetailRowDescriptor(
+                    [
+                        CharColumn("row_type", 1),
+                        CharColumn("name", 60),
+                        RightCharColumn("right_name", 60),
+                        PositiveIntegerColumn("positive_interger", 9),
+                        PositiveDecimalColumn("positive_decimal", 9),
+                        DateTimeColumn("datetime"),
+                        DateColumn("date"),
+                        TimeColumn("time"),
+                    ]
+                )
             ],
-            HeaderRowDescriptor([
-                CharColumn('row_type', 1),
-                CharColumn('filetype', 5),
-                CharColumn('fill', 157),
-            ]),
-            FooterRowDescriptor([
-                CharColumn('row_type', 1),
-                PositiveIntegerColumn('detail_count', 4),
-                PositiveIntegerColumn('row_count', 4),
-                CharColumn('fill', 154),
-            ]),
+            HeaderRowDescriptor(
+                [
+                    CharColumn("row_type", 1),
+                    CharColumn("filetype", 5),
+                    CharColumn("fill", 157),
+                ]
+            ),
+            FooterRowDescriptor(
+                [
+                    CharColumn("row_type", 1),
+                    PositiveIntegerColumn("detail_count", 4),
+                    PositiveIntegerColumn("row_count", 4),
+                    CharColumn("fill", 154),
+                ]
+            ),
         )
-        assets_dir = os.path.join(os.path.dirname(__file__), 'assets')
-        with open(os.path.join(assets_dir, 'example01.json')) as f:
+        assets_dir = os.path.join(os.path.dirname(__file__), "assets")
+        with open(os.path.join(assets_dir, "example01.json")) as f:
             self.example01_json = f.read()
-        with open(os.path.join(assets_dir, 'example01.md')) as f:
+        with open(os.path.join(assets_dir, "example01.md")) as f:
             self.example01_markdown = f.read()
 
     def test_constructor_empty(self):
-        self.assertRaisesRegex(TypeError, 'missing 1', FileDescriptor)
+        self.assertRaisesRegex(TypeError, "missing 1", FileDescriptor)
 
     def test_constructor_all_right(self):
         f = CharColumn("type", 1)
         self.assertIsInstance(FileDescriptor([DetailRowDescriptor([f])]), FileDescriptor)
-        self.assertIsInstance(FileDescriptor([DetailRowDescriptor([f])],
-                                             HeaderRowDescriptor([f])), FileDescriptor)
-        self.assertIsInstance(FileDescriptor([DetailRowDescriptor([f])],
-                                             HeaderRowDescriptor([f]),
-                                             FooterRowDescriptor([f])), FileDescriptor)
+        self.assertIsInstance(
+            FileDescriptor([DetailRowDescriptor([f])], HeaderRowDescriptor([f])),
+            FileDescriptor,
+        )
+        self.assertIsInstance(
+            FileDescriptor(
+                [DetailRowDescriptor([f])],
+                HeaderRowDescriptor([f]),
+                FooterRowDescriptor([f]),
+            ),
+            FileDescriptor,
+        )
 
     def test_constructor_wrong_args(self):
         col = CharColumn("type", 1)
         dr = DetailRowDescriptor([col])
-        self.assertRaisesRegex(AssertionError, 'details.*List', FileDescriptor, col)
-        self.assertRaisesRegex(AssertionError, 'details.*List', FileDescriptor, None)
-        self.assertRaisesRegex(AssertionError, 'details.*List', FileDescriptor, 1)
-        self.assertRaisesRegex(AssertionError, 'details.*1 DetailRow', FileDescriptor, [])
-        self.assertRaisesRegex(AssertionError, 'details.*List.*DetailRow', FileDescriptor, [1])
-        self.assertRaisesRegex(AssertionError, 'details.*List.*DetailRow', FileDescriptor, [col], 1)
-        self.assertRaisesRegex(AssertionError, 'details.*List', FileDescriptor, dr, 1)
-        self.assertRaisesRegex(AssertionError, 'header.*HeaderRow', FileDescriptor, [dr], 1)
-        self.assertRaisesRegex(AssertionError, 'footer.*FooterRow', FileDescriptor, [dr], None, 1)
+        self.assertRaisesRegex(AssertionError, "details.*List", FileDescriptor, col)
+        self.assertRaisesRegex(AssertionError, "details.*List", FileDescriptor, None)
+        self.assertRaisesRegex(AssertionError, "details.*List", FileDescriptor, 1)
+        self.assertRaisesRegex(AssertionError, "details.*1 DetailRow", FileDescriptor, [])
+        self.assertRaisesRegex(AssertionError, "details.*List.*DetailRow", FileDescriptor, [1])
+        self.assertRaisesRegex(AssertionError, "details.*List.*DetailRow", FileDescriptor, [col], 1)
+        self.assertRaisesRegex(AssertionError, "details.*List", FileDescriptor, dr, 1)
+        self.assertRaisesRegex(AssertionError, "header.*HeaderRow", FileDescriptor, [dr], 1)
+        self.assertRaisesRegex(AssertionError, "footer.*FooterRow", FileDescriptor, [dr], None, 1)
 
     def test_constructor_set_attr(self):
         t = CharColumn("type", 1)
-        fd = FileDescriptor([DetailRowDescriptor([t])], HeaderRowDescriptor([t]), FooterRowDescriptor([t]))
+        fd = FileDescriptor(
+            [DetailRowDescriptor([t])],
+            HeaderRowDescriptor([t]),
+            FooterRowDescriptor([t]),
+        )
         self.assertIsInstance(fd, FileDescriptor)
         self.assertIsInstance(fd.header, HeaderRowDescriptor)
         self.assertIsInstance(fd.footer, FooterRowDescriptor)
         self.assertIsInstance(fd.details, list)
 
     def test_constructor_invalid_line_size(self):
-        t = CharColumn("type", 1)
-        self.assertRaisesRegex(AssertionError, 'header \(1\).*footer \(2\).*details \(\[1\]\)')
+        self.assertRaisesRegex(AssertionError, r"header \(1\).*footer \(2\).*details \(\[1\]\)")
 
     # def test_dehydrate(self):
     #     self.assertDictEqual(json.loads(self.example01_json), self.file_descriptor.dehydrate())
 
     # def test_hydrate(self):
     #     FileDescriptor.hydrate(json.loads(self.example01_json))
-
 
     # def test_file_format_validate(self):
     #     fd = FileDescriptor(
@@ -221,37 +244,42 @@ class TestFileDescriptor(TestCase):
 
 
 class TestRenders(TestCase):
-
     def setUp(self):
         self.file_descriptor = FileDescriptor(
             [
-                DetailRowDescriptor([
-                    CharColumn('row_type', 1),
-                    CharColumn('name', 60),
-                    RightCharColumn('right_name', 60),
-                    PositiveIntegerColumn('positive_interger', 9),
-                    PositiveDecimalColumn('positive_decimal', 9),
-                    DateTimeColumn('datetime'),
-                    DateColumn('date'),
-                    TimeColumn('time'),
-                ])
+                DetailRowDescriptor(
+                    [
+                        CharColumn("row_type", 1),
+                        CharColumn("name", 60),
+                        RightCharColumn("right_name", 60),
+                        PositiveIntegerColumn("positive_interger", 9),
+                        PositiveDecimalColumn("positive_decimal", 9),
+                        DateTimeColumn("datetime"),
+                        DateColumn("date"),
+                        TimeColumn("time"),
+                    ]
+                )
             ],
-            HeaderRowDescriptor([
-                CharColumn('row_type', 1),
-                CharColumn('filetype', 5),
-                CharColumn('fill', 157),
-            ]),
-            FooterRowDescriptor([
-                CharColumn('row_type', 1),
-                PositiveIntegerColumn('detail_count', 4),
-                PositiveIntegerColumn('row_count', 4),
-                CharColumn('fill', 154),
-            ]),
+            HeaderRowDescriptor(
+                [
+                    CharColumn("row_type", 1),
+                    CharColumn("filetype", 5),
+                    CharColumn("fill", 157),
+                ]
+            ),
+            FooterRowDescriptor(
+                [
+                    CharColumn("row_type", 1),
+                    PositiveIntegerColumn("detail_count", 4),
+                    PositiveIntegerColumn("row_count", 4),
+                    CharColumn("fill", 154),
+                ]
+            ),
         )
-        assets_dir = os.path.join(os.path.dirname(__file__), 'assets')
-        with open(os.path.join(assets_dir, 'example01.json')) as f:
+        assets_dir = os.path.join(os.path.dirname(__file__), "assets")
+        with open(os.path.join(assets_dir, "example01.json")) as f:
             self.example01_json = f.read()
-        with open(os.path.join(assets_dir, 'example01.md')) as f:  # UTF-8!
+        with open(os.path.join(assets_dir, "example01.md")) as f:  # UTF-8!
             self.example01_markdown = f.read()
 
     def test_render_as_markdown(self):

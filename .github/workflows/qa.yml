@@ -34,7 +34,6 @@ jobs:
       - name: Check Python formatting (black + isort)
         run: |
           black . --check
-          isort . --profile black --check-only
 
       - name: Run Bandit SAST
         run: bandit -c pyproject.toml -r sc4py

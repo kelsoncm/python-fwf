@@ -21,33 +21,49 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-
-__author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
+__author__ = "Kelson da Costa Medeiros <kelsoncm@gmail.com>"
 
 
 from io import StringIO
-import importlib
-from typing import List, Dict
-from .columns import AbstractColumn
+
 from .descriptors import FileDescriptor
 
 
 def render_as_markdown(file_descriptor: FileDescriptor, out: StringIO):
     def table_header(title, max_colname_size, max_coltype_size):
-        out.write(("# {title}\n\n" 
-                   "|    # | {name:<%d} | Size | Start |  End | {type:<%d} | Description\n" 
-                   "| ---- | {sep:-<%d} | ---- | ----- | ---- | {sep:-<%d} | -----------\n" %
-                   (max_colname_size, max_coltype_size, max_colname_size, max_coltype_size)).
-                  format(title=title, name='Column', type='Type', sep='-'))
+        out.write(
+            (
+                "# {title}\n\n"
+                "|    # | {name:<%d} | Size | Start |  End | {type:<%d} | Description\n"
+                "| ---- | {sep:-<%d} | ---- | ----- | ---- | {sep:-<%d} | -----------\n"
+                % (
+                    max_colname_size,
+                    max_coltype_size,
+                    max_colname_size,
+                    max_coltype_size,
+                )
+            ).format(title=title, name="Column", type="Type", sep="-")
+        )
 
     def table_body(cols, max_colname_size, max_coltype_size):
         line = 0
-        template = "| {0:>4d} | {1: <%d} | {2:>4d} | {3:>5d} | {4:>4d} | {5:<%d} | {6}\n" \
-                   % (max_colname_size, max_coltype_size)
+        template = "| {0:>4d} | {1: <%d} | {2:>4d} | {3:>5d} | {4:>4d} | {5:<%d} | {6}\n" % (
+            max_colname_size,
+            max_coltype_size,
+        )
         for col in cols:
             line += 1
-            out.write(template.format(line, col.name, col.size, col.start, col.end, col.__class__.__name__,
-                                      col.description))
+            out.write(
+                template.format(
+                    line,
+                    col.name,
+                    col.size,
+                    col.start,
+                    col.end,
+                    col.__class__.__name__,
+                    col.description,
+                )
+            )
 
     def table(title, cols, trailling=True):
         max_colname_size = max([len(col.name) for col in cols])

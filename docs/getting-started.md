@@ -41,7 +41,7 @@ All rows in a file share the same line length.
 
 ## Step 1 — Define your columns
 
-Each column is an instance of a typed class from `pyfwf.columns`.  
+Each column is an instance of a typed class from `pyfwf.columns`.
 The first argument is the field name, the second is the width in characters.
 
 ```python

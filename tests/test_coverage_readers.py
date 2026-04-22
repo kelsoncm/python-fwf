@@ -1,22 +1,28 @@
-﻿"""
+"""
 The MIT License (MIT)
 
 Copyright 2015 Umbrella Tech.
 """
 
-__author__ = 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
+__author__ = "Kelson da Costa Medeiros <kelsoncm@gmail.com>"
 
 from unittest import TestCase
-from pyfwf.readers import Reader
+
 from pyfwf.columns import CharColumn
-from pyfwf.descriptors import HeaderRowDescriptor, FooterRowDescriptor, DetailRowDescriptor, FileDescriptor
+from pyfwf.descriptors import (
+    DetailRowDescriptor,
+    FileDescriptor,
+    FooterRowDescriptor,
+    HeaderRowDescriptor,
+)
+from pyfwf.readers import Reader
 
 
 class TestReaderStringInput(TestCase):
     """Test Reader with string input"""
 
     def setUp(self):
-        self.fd = FileDescriptor([DetailRowDescriptor([CharColumn('c1', 5), CharColumn('c2', 4)])])
+        self.fd = FileDescriptor([DetailRowDescriptor([CharColumn("c1", 5), CharColumn("c2", 4)])])
 
     def test_string_input_single_newline(self):
         """Test reading from string with \\n newline"""
@@ -24,7 +30,7 @@ class TestReaderStringInput(TestCase):
         reader = Reader(content, self.fd, newline="\n")
         rows = list(reader)
         self.assertEqual(1, len(rows))
-        self.assertEqual({'c1': 'AAAAA', 'c2': 'BBB'}, rows[0])
+        self.assertEqual({"c1": "AAAAA", "c2": "BBB"}, rows[0])
 
     def test_list_input_single_newline(self):
         """Test reading from list with \\n newline"""
@@ -32,15 +38,15 @@ class TestReaderStringInput(TestCase):
         reader = Reader(lines, self.fd, newline="\n")
         rows = list(reader)
         self.assertEqual(2, len(rows))
-        self.assertEqual({'c1': 'AAAAA', 'c2': 'BBB'}, rows[0])
-        self.assertEqual({'c1': 'CCCCC', 'c2': 'DDD'}, rows[1])
+        self.assertEqual({"c1": "AAAAA", "c2": "BBB"}, rows[0])
+        self.assertEqual({"c1": "CCCCC", "c2": "DDD"}, rows[1])
 
     def test_iterator_protocol(self):
         """Test iterator protocol"""
         reader = Reader("AAAAA BBB\n", self.fd, newline="\n")
         self.assertEqual(reader, iter(reader))
         row = next(reader)
-        self.assertEqual({'c1': 'AAAAA', 'c2': 'BBB'}, row)
+        self.assertEqual({"c1": "AAAAA", "c2": "BBB"}, row)
 
 
 class TestReaderWithHeader(TestCase):
@@ -48,8 +54,8 @@ class TestReaderWithHeader(TestCase):
 
     def setUp(self):
         self.fd = FileDescriptor(
-            [DetailRowDescriptor([CharColumn('d1', 5), CharColumn('d2', 4)])],
-            HeaderRowDescriptor([CharColumn('h1', 5), CharColumn('h2', 4)])
+            [DetailRowDescriptor([CharColumn("d1", 5), CharColumn("d2", 4)])],
+            HeaderRowDescriptor([CharColumn("h1", 5), CharColumn("h2", 4)]),
         )
 
     def test_header_reading(self):
@@ -58,8 +64,8 @@ class TestReaderWithHeader(TestCase):
         reader = Reader(content, self.fd, newline="\n")
         rows = list(reader)
         self.assertEqual(2, len(rows))
-        self.assertEqual({'h1': 'HHHHH', 'h2': 'HHH'}, rows[0])
-        self.assertEqual({'d1': 'AAAAA', 'd2': 'BBB'}, rows[1])
+        self.assertEqual({"h1": "HHHHH", "h2": "HHH"}, rows[0])
+        self.assertEqual({"d1": "AAAAA", "d2": "BBB"}, rows[1])
 
 
 class TestReaderWithFooter(TestCase):
@@ -67,8 +73,8 @@ class TestReaderWithFooter(TestCase):
 
     def setUp(self):
         self.fd = FileDescriptor(
-            [DetailRowDescriptor([CharColumn('d1', 5), CharColumn('d2', 4)])],
-            footer=FooterRowDescriptor([CharColumn('f1', 5), CharColumn('f2', 4)])
+            [DetailRowDescriptor([CharColumn("d1", 5), CharColumn("d2", 4)])],
+            footer=FooterRowDescriptor([CharColumn("f1", 5), CharColumn("f2", 4)]),
         )
 
     def test_footer_reading(self):
@@ -77,7 +83,7 @@ class TestReaderWithFooter(TestCase):
         reader = Reader(content, self.fd, newline="\n")
         rows = list(reader)
         self.assertEqual(2, len(rows))
-        self.assertEqual({'f1': 'FFFFF', 'f2': 'FFF'}, rows[1])
+        self.assertEqual({"f1": "FFFFF", "f2": "FFF"}, rows[1])
 
 
 class TestReaderWithBoth(TestCase):
@@ -85,9 +91,9 @@ class TestReaderWithBoth(TestCase):
 
     def setUp(self):
         self.fd = FileDescriptor(
-            [DetailRowDescriptor([CharColumn('d1', 5), CharColumn('d2', 4)])],
-            HeaderRowDescriptor([CharColumn('h1', 5), CharColumn('h2', 4)]),
-            FooterRowDescriptor([CharColumn('f1', 5), CharColumn('f2', 4)])
+            [DetailRowDescriptor([CharColumn("d1", 5), CharColumn("d2", 4)])],
+            HeaderRowDescriptor([CharColumn("h1", 5), CharColumn("h2", 4)]),
+            FooterRowDescriptor([CharColumn("f1", 5), CharColumn("f2", 4)]),
         )
 
     def test_header_footer(self):
@@ -102,7 +108,7 @@ class TestReaderNewline(TestCase):
     """Test Reader newline handling"""
 
     def setUp(self):
-        self.fd = FileDescriptor([DetailRowDescriptor([CharColumn('c1', 5), CharColumn('c2', 4)])])
+        self.fd = FileDescriptor([DetailRowDescriptor([CharColumn("c1", 5), CharColumn("c2", 4)])])
 
     def test_newline_lf(self):
         """Test newline LF"""
@@ -122,29 +128,28 @@ class TestReaderNewline(TestCase):
         reader = Reader(content, self.fd, newline="\n")
         rows = list(reader)
         self.assertEqual(2, len(rows))
-        self.assertEqual({'c1': 'AAAAA', 'c2': 'BBB'}, rows[0])
-        self.assertEqual({'c1': 'CCCCC', 'c2': 'DDD'}, rows[1])
+        self.assertEqual({"c1": "AAAAA", "c2": "BBB"}, rows[0])
+        self.assertEqual({"c1": "CCCCC", "c2": "DDD"}, rows[1])
 
 
 class TestReaderInvalid(TestCase):
     """Test Reader validation"""
 
     def setUp(self):
-        self.fd = FileDescriptor([DetailRowDescriptor([CharColumn('c1', 5), CharColumn('c2', 4)])])
+        self.fd = FileDescriptor([DetailRowDescriptor([CharColumn("c1", 5), CharColumn("c2", 4)])])
 
     def test_invalid_iterable(self):
         """Test invalid iterable"""
-        self.assertRaisesRegex(AssertionError, 'Iterator', Reader, 123, self.fd)
+        self.assertRaisesRegex(AssertionError, "Iterator", Reader, 123, self.fd)
 
     def test_invalid_descriptor(self):
         """Test invalid descriptor"""
-        self.assertRaisesRegex(AssertionError, 'FileDescriptor', Reader, "AAAAA BBB\n", "bad")
+        self.assertRaisesRegex(AssertionError, "FileDescriptor", Reader, "AAAAA BBB\n", "bad")
 
     def test_invalid_newline(self):
         """Test invalid newline"""
-        self.assertRaisesRegex(AssertionError, 'newline', Reader, "AAAAA BBB\n", self.fd, newline="\t")
+        self.assertRaisesRegex(AssertionError, "newline", Reader, "AAAAA BBB\n", self.fd, newline="\t")
 
     def test_wrong_line_size(self):
         """Test wrong line size"""
-        self.assertRaisesRegex(AssertionError, 'tamanho correto', Reader, "SHORT\n", self.fd)
-
+        self.assertRaisesRegex(AssertionError, "tamanho correto", Reader, "SHORT\n", self.fd)
