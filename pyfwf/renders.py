@@ -71,7 +71,7 @@ def render_as_markdown(file_descriptor: FileDescriptor, out: StringIO):
         table_header(title, max_colname_size, max_coltype_size)
         table_body(cols, max_colname_size, max_coltype_size)
         if trailling:
-            out.write("\n\n")
+            out.write("\n")
 
     if file_descriptor.header:
         table("HEADER", file_descriptor.header.columns)

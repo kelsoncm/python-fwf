@@ -1,4 +1,6 @@
-# HEADER
+# Description
+
+## HEADER
 
 |    # | Column   | Size | Start |  End | Type       | Description
 | ---- | -------- | ---- | ----- | ---- | ---------- | -----------
@@ -6,8 +8,7 @@
 |    2 | filetype |    5 |     2 |    6 | CharColumn | filetype
 |    3 | fill     |  157 |     7 |  163 | CharColumn | fill
 
-
-# DETAILS 1
+## DETAILS 1
 
 |    # | Column            | Size | Start |  End | Type                  | Description
 | ---- | ----------------- | ---- | ----- | ---- | --------------------- | -----------
@@ -20,8 +21,7 @@
 |    7 | date              |    8 |   152 |  159 | DateColumn            | date
 |    8 | time              |    4 |   160 |  163 | TimeColumn            | time
 
-
-# FOOTER
+## FOOTER
 
 |    # | Column       | Size | Start |  End | Type                  | Description
 | ---- | ------------ | ---- | ----- | ---- | --------------------- | -----------
