@@ -52,9 +52,13 @@ class RowDescriptor(Hydrator):
             if prev is None:
                 assert col.start == 1, "A coluna %s deve começar com 1" % col.name
             else:
-                assert prev.end + 1 == col.start, (
-                    "A coluna %s (starts in %d) deve começar imediatamente após "
-                    "a coluna %s (ends in %d)" % (col.name, col.start, prev.name, prev.end)
+                assert (
+                    prev.end + 1 == col.start
+                ), "A coluna %s (starts in %d) deve começar imediatamente após " "a coluna %s (ends in %d)" % (
+                    col.name,
+                    col.start,
+                    prev.name,
+                    prev.end,
                 )
             prev = col
 
@@ -88,9 +92,9 @@ class FileDescriptor(Hydrator):
         for detail in details:
             assert isinstance(detail, DetailRowDescriptor), "details deve ser uma List de DetailRowDescriptor"
         assert isinstance(header, HeaderRowDescriptor) or header is None, "header deve ser um HeaderRowDescriptor"
-        assert isinstance(footer, FooterRowDescriptor) or footer is None, (
-            "footer_descriptor deve ser um FooterRowDescriptor"
-        )
+        assert (
+            isinstance(footer, FooterRowDescriptor) or footer is None
+        ), "footer_descriptor deve ser um FooterRowDescriptor"
 
         self.header = header
         self.footer = footer
@@ -104,6 +108,6 @@ class FileDescriptor(Hydrator):
         d = self.details[0].line_size
         ln = [x.line_size for x in self.details]
         s = sum(ln)
-        assert (s == d * len(self.details)) and (d == h or h == 0) and (d == f or f == 0), (
-            "O tamanho das linhas header (%d), footer (%d) e das details (%s) devem ser iguais" % (h, f, ln)
-        )
+        assert (
+            (s == d * len(self.details)) and (d == h or h == 0) and (d == f or f == 0)
+        ), "O tamanho das linhas header (%d), footer (%d) e das details (%s) devem ser iguais" % (h, f, ln)

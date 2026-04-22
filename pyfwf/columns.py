@@ -166,9 +166,9 @@ class DateTimeColumn(AbstractColumn):
         assert _format and _format.strip(), (
             "O argumento '_format' do campo '%s' deve ser uma string válida e não branca" % _name
         )
-        assert len([x for x in re.finditer(re.compile("(%[a-z,A-Z])"), _format)]) == self.format_num_elements, (
-            "O argumento '_format' (%s) do campo '%s' deve ter um formato de data/hora válido" % (_format, _name)
-        )
+        assert (
+            len([x for x in re.finditer(re.compile("(%[a-z,A-Z])"), _format)]) == self.format_num_elements
+        ), "O argumento '_format' (%s) do campo '%s' deve ter um formato de data/hora válido" % (_format, _name)
 
         _size = len(datetime(2001, 12, 31, 13, 59).strftime(_format))
 
