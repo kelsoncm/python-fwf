@@ -1,11 +1,3 @@
-"""
-The MIT License (MIT)
-
-Copyright 2015 Umbrella Tech.
-"""
-
-__author__ = "Kelson da Costa Medeiros <kelsoncm@gmail.com>"
-
 import io
 from unittest import TestCase
 

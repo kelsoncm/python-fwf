@@ -44,19 +44,19 @@ def create_class(full_class_name, *args, **kwargs):
 
 def assert_element_isinstance(name, lst, cls):
     if name in lst:
-        assert isinstance(lst[name], cls), "%s has informed, but is not a %s" % (
-            name,
-            cls,
-        )
+        if not isinstance(lst[name], cls):
+            raise TypeError("%s has informed, but is not a %s" % (name, cls))
 
 
 def assert_isinstance(name, value, cls):
-    assert isinstance(value, cls), "%s is not a %s" % (name, cls)
+    if not isinstance(value, cls):
+        raise TypeError("%s is not a %s" % (name, cls))
 
 
 def hydrate_object(representation: Dict):
     assert_isinstance("representation", representation, Dict)
-    assert "_hydrate_as" in representation, "_hydrate_as is required"
+    if "_hydrate_as" not in representation:
+        raise ValueError("_hydrate_as is required")
     assert_element_isinstance("_hydrate_as", representation, str)
     assert_element_isinstance("args", representation, List)
     assert_element_isinstance("kwargs", representation, Dict)

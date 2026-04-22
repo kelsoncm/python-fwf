@@ -39,14 +39,19 @@ class AbstractColumn(Hydrator):
 
     def __init__(self, _name: str, size: int, description: str = None):
         super(AbstractColumn, self).__init__()
-        assert isinstance(_name, str), "O campo name deve ser uma string"
-        assert _name and _name.rstrip(), "O campo column_name deve ser uma string válida e não branca"
-        assert isinstance(size, int), "O campo size deve ser um inteiro"
-        assert size > 0, "O campo size deve ser maior que 0"
+        if not isinstance(_name, str):
+            raise TypeError("O campo name deve ser uma string")
+        if not (_name and _name.rstrip()):
+            raise ValueError("O campo column_name deve ser uma string válida e não branca")
+        if not isinstance(size, int):
+            raise TypeError("O campo size deve ser um inteiro")
+        if size <= 0:
+            raise ValueError("O campo size deve ser maior que 0")
         if description is None:
             description = _name
         else:
-            assert isinstance(description, str), "O campo description deve ser uma string"
+            if not isinstance(description, str):
+                raise TypeError("O campo description deve ser uma string")
 
         self.name = _name
         self.size = size
@@ -55,33 +60,32 @@ class AbstractColumn(Hydrator):
 
     @property
     def end(self):
-        assert isinstance(self.start, int), "O campo start deve ser um inteiro"
-        assert self.start > 0, "O campo start deve ser maior que 0"
+        if not isinstance(self.start, int):
+            raise TypeError("O campo start deve ser um inteiro")
+        if self.start <= 0:
+            raise ValueError("O campo start deve ser maior que 0")
         return self.start + self.size - 1
 
     def to_value(self, slice):
-        assert isinstance(slice, str), "Informe uma string para converter corretamente"
-        assert len(slice) == self.size, "A string deve ter exatamente o tamanho do campo '%s' (%s)" % (
-            self.name,
-            self.size,
-        )
+        if not isinstance(slice, str):
+            raise TypeError("Informe uma string para converter corretamente")
+        if len(slice) != self.size:
+            raise ValueError("A string deve ter exatamente o tamanho do campo '%s' (%s)" % (self.name, self.size))
         return slice
 
     def _validate_to_str_size(self, value):
-        assert len(value) == self.size, "O valor a ser serializado para o campo '%s' não pode ser diferente de %d " % (
-            self.name,
-            self.size,
-        )
+        if len(value) != self.size:
+            raise ValueError(
+                "O valor a ser serializado para o campo '%s' não pode ser diferente de %d " % (self.name, self.size)
+            )
         return value
 
     def to_str_assertion(self, value):
         return isinstance(value, self.to_str_assertion_class)
 
     def to_str(self, value: str):
-        assert value is None or self.to_str_assertion(value), "O campo '%s' só aceita '%s' or 'None'" % (
-            self.name,
-            self.to_str_assertion_types,
-        )
+        if not (value is None or self.to_str_assertion(value)):
+            raise TypeError("O campo '%s' só aceita '%s' or 'None'" % (self.name, self.to_str_assertion_types))
 
         if value is None:
             return self.to_str_none_pad * self.size
@@ -114,10 +118,11 @@ class PositiveIntegerColumn(AbstractColumn):
 
     def to_value(self, slice: str):
         _value = int(super(PositiveIntegerColumn, self).to_value(slice))
-        assert _value >= 0, "Informe uma string para converter corretamente, '%s' não é um '%s'" % (
-            slice,
-            self.to_str_assertion_types,
-        )
+        if _value < 0:
+            raise ValueError(
+                "Informe uma string para converter corretamente, '%s' não é um '%s'"
+                % (slice, self.to_str_assertion_types)
+            )
         return _value
 
 
@@ -128,9 +133,12 @@ class PositiveDecimalColumn(PositiveIntegerColumn):
 
     def __init__(self, _name: str, size: int, decimals: int = 2, description: str = None):
         super(PositiveDecimalColumn, self).__init__(_name, size, description)
-        assert isinstance(decimals, int), "Os decimais devem ser um inteiro"
-        assert decimals > 0, "Os decimais devem ser maior que 0"
-        assert size > decimals, "Os decimais devem ser menores que o size"
+        if not isinstance(decimals, int):
+            raise TypeError("Os decimais devem ser um inteiro")
+        if decimals <= 0:
+            raise ValueError("Os decimais devem ser maior que 0")
+        if size <= decimals:
+            raise ValueError("Os decimais devem ser menores que o size")
         self.decimals = decimals
 
     def to_value(self, slice: str):
@@ -140,10 +148,8 @@ class PositiveDecimalColumn(PositiveIntegerColumn):
         return isinstance(value, float) and not isinstance(value, bool) and value >= 0.0
 
     def to_str(self, value: str):
-        assert value is None or self.to_str_assertion(value), "O campo '%s' só aceita '%s' or 'None'" % (
-            self.name,
-            self.to_str_assertion_types,
-        )
+        if not (value is None or self.to_str_assertion(value)):
+            raise TypeError("O campo '%s' só aceita '%s' or 'None'" % (self.name, self.to_str_assertion_types))
 
         if value is None:
             return self.to_str_none_pad * self.size
@@ -160,15 +166,18 @@ class DateTimeColumn(AbstractColumn):
     hydrating_args = ["name", "format", "description"]
 
     def __init__(self, _name: str, _format: str = "%d%m%Y%H%M", description: str = None):
-        assert isinstance(_name, str), "O campo name deve ser uma string"
-        assert _name and _name.strip(), "O campo column_name deve ser uma string válida e não branca"
-        assert isinstance(_format, str), "O argumento '_format' do campo '%s' deve ser uma string" % _name
-        assert _format and _format.strip(), (
-            "O argumento '_format' do campo '%s' deve ser uma string válida e não branca" % _name
-        )
-        assert (
-            len([x for x in re.finditer(re.compile("(%[a-z,A-Z])"), _format)]) == self.format_num_elements
-        ), "O argumento '_format' (%s) do campo '%s' deve ter um formato de data/hora válido" % (_format, _name)
+        if not isinstance(_name, str):
+            raise TypeError("O campo name deve ser uma string")
+        if not (_name and _name.strip()):
+            raise ValueError("O campo column_name deve ser uma string válida e não branca")
+        if not isinstance(_format, str):
+            raise TypeError("O argumento '_format' do campo '%s' deve ser uma string" % _name)
+        if not (_format and _format.strip()):
+            raise ValueError("O argumento '_format' do campo '%s' deve ser uma string válida e não branca" % _name)
+        if len([x for x in re.finditer(re.compile("(%[a-z,A-Z])"), _format)]) != self.format_num_elements:
+            raise ValueError(
+                "O argumento '_format' (%s) do campo '%s' deve ter um formato de data/hora válido" % (_format, _name)
+            )
 
         _size = len(datetime(2001, 12, 31, 13, 59).strftime(_format))
 
@@ -190,10 +199,8 @@ class DateTimeColumn(AbstractColumn):
             )
 
     def to_str(self, value: datetime):
-        assert value is None or self.to_str_assertion(value), "O campo '%s' só aceita '%s' or 'None'" % (
-            self.name,
-            self.to_str_assertion_types,
-        )
+        if not (value is None or self.to_str_assertion(value)):
+            raise TypeError("O campo '%s' só aceita '%s' or 'None'" % (self.name, self.to_str_assertion_types))
 
         if value is None:
             return self.to_str_none_pad * self.size

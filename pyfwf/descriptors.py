@@ -33,8 +33,10 @@ from .hydrating import Hydrator
 class RowDescriptor(Hydrator):
     def __init__(self, columns: List[AbstractColumn]):
         super(RowDescriptor, self).__init__()
-        assert isinstance(columns, list), "columns deve ser uma List"
-        assert columns != [], "columns deve ter ao menos 1 elemento"
+        if not isinstance(columns, list):
+            raise TypeError("columns deve ser uma List")
+        if not columns:
+            raise ValueError("columns deve ter ao menos 1 elemento")
         self.columns = columns
         last = None
         for column in columns:
@@ -50,16 +52,14 @@ class RowDescriptor(Hydrator):
         prev = None
         for col in self.columns:
             if prev is None:
-                assert col.start == 1, "A coluna %s deve começar com 1" % col.name
+                if col.start != 1:
+                    raise ValueError("A coluna %s deve começar com 1" % col.name)
             else:
-                assert (
-                    prev.end + 1 == col.start
-                ), "A coluna %s (starts in %d) deve começar imediatamente após " "a coluna %s (ends in %d)" % (
-                    col.name,
-                    col.start,
-                    prev.name,
-                    prev.end,
-                )
+                if prev.end + 1 != col.start:
+                    raise ValueError(
+                        "A coluna %s (starts in %d) deve começar imediatamente após a coluna %s (ends in %d)"
+                        % (col.name, col.start, prev.name, prev.end)
+                    )
             prev = col
 
     def get_values(self, row):
@@ -87,14 +87,17 @@ class FileDescriptor(Hydrator):
     ):
         super(FileDescriptor, self).__init__()
 
-        assert isinstance(details, list), "details deve ser uma List"
-        assert len(details) > 0, "details deve ser uma List com ao menos 1 DetailRowDescriptor"
+        if not isinstance(details, list):
+            raise TypeError("details deve ser uma List")
+        if len(details) == 0:
+            raise ValueError("details deve ser uma List com ao menos 1 DetailRowDescriptor")
         for detail in details:
-            assert isinstance(detail, DetailRowDescriptor), "details deve ser uma List de DetailRowDescriptor"
-        assert isinstance(header, HeaderRowDescriptor) or header is None, "header deve ser um HeaderRowDescriptor"
-        assert (
-            isinstance(footer, FooterRowDescriptor) or footer is None
-        ), "footer_descriptor deve ser um FooterRowDescriptor"
+            if not isinstance(detail, DetailRowDescriptor):
+                raise TypeError("details deve ser uma List de DetailRowDescriptor")
+        if not (isinstance(header, HeaderRowDescriptor) or header is None):
+            raise TypeError("header deve ser um HeaderRowDescriptor")
+        if not (isinstance(footer, FooterRowDescriptor) or footer is None):
+            raise TypeError("footer_descriptor deve ser um FooterRowDescriptor")
 
         self.header = header
         self.footer = footer
@@ -108,6 +111,7 @@ class FileDescriptor(Hydrator):
         d = self.details[0].line_size
         ln = [x.line_size for x in self.details]
         s = sum(ln)
-        assert (
-            (s == d * len(self.details)) and (d == h or h == 0) and (d == f or f == 0)
-        ), "O tamanho das linhas header (%d), footer (%d) e das details (%s) devem ser iguais" % (h, f, ln)
+        if not ((s == d * len(self.details)) and (d == h or h == 0) and (d == f or f == 0)):
+            raise ValueError(
+                "O tamanho das linhas header (%d), footer (%d) e das details (%s) devem ser iguais" % (h, f, ln)
+            )

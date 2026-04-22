@@ -83,7 +83,7 @@
         "_hydrate_as": "fwf.columns.CharColumn",
         "args": {
           "name": "filetype",
-          "size": 3,
+          "size": 5,
           "description": "filetype"
         }
       },
@@ -91,7 +91,7 @@
         "_hydrate_as": "fwf.columns.CharColumn",
         "args": {
           "name": "fill",
-          "size": 159,
+          "size": 157,
           "description": "fill"
         }
       }

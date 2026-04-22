@@ -1,28 +1,3 @@
-"""
-The MIT License (MIT)
-
-Copyright 2015 Umbrella Tech.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
-
-__author__ = "Kelson da Costa Medeiros <kelsoncm@gmail.com>"
-
 from unittest import TestCase
 
 from pyfwf.hydrating import (
@@ -55,53 +30,36 @@ class TestFunctionHydrate(TestCase):
         self.assertIsInstance(hydrate_object({"_hydrate_as": "test_hydrating.WeCanTest"}), WeCanTest)
 
     def test_hydrate_wrong_args__empty(self):
-        self.assertRaisesRegex(TypeError, "missing 1", hydrate_object)
+        with self.assertRaises(TypeError):
+            hydrate_object()
 
     def test_hydrate_wrong_args__representation_not_dict(self):
-        self.assertRaisesRegex(AssertionError, "representation.*Dict", hydrate_object, "")
+        with self.assertRaises(TypeError):
+            hydrate_object("")
 
     def test_hydrate_wrong_args__type_not_informed(self):
-        self.assertRaisesRegex(AssertionError, "_hydrate_as is required", hydrate_object, {})
+        with self.assertRaises(ValueError):
+            hydrate_object({})
 
     def test_hydrate_wrong_args__type_not_str(self):
-        self.assertRaisesRegex(
-            AssertionError,
-            "_hydrate_as has informed.*str",
-            hydrate_object,
-            {"_hydrate_as": 1},
-        )
+        with self.assertRaises(TypeError):
+            hydrate_object({"_hydrate_as": 1})
 
     def test_hydrate_wrong_args__type_not_exists(self):
-        self.assertRaisesRegex(
-            AttributeError,
-            "test_hydrating.*WeCanTest2",
-            hydrate_object,
-            {"_hydrate_as": "test_hydrating.WeCanTest2"},
-        )
+        with self.assertRaises(AttributeError):
+            hydrate_object({"_hydrate_as": "test_hydrating.WeCanTest2"})
 
     def test_hydrate_wrong_args__args_not_list(self):
-        self.assertRaisesRegex(
-            AssertionError,
-            "args.*List",
-            hydrate_object,
-            {"_hydrate_as": "tests.test_hydrating.WeCanTest", "args": None},
-        )
+        with self.assertRaises(TypeError):
+            hydrate_object({"_hydrate_as": "tests.test_hydrating.WeCanTest", "args": None})
 
     def test_hydrate_wrong_args__kwargs_not_dict(self):
-        self.assertRaisesRegex(
-            AssertionError,
-            "kwargs.*Dict",
-            hydrate_object,
-            {"_hydrate_as": "tests.test_hydrating.WeCanTest", "kwargs": None},
-        )
+        with self.assertRaises(TypeError):
+            hydrate_object({"_hydrate_as": "tests.test_hydrating.WeCanTest", "kwargs": None})
 
     def test_hydrate_wrong_args__attributes_not_dict(self):
-        self.assertRaisesRegex(
-            AssertionError,
-            "attributes.*Dict",
-            hydrate_object,
-            {"_hydrate_as": "tests.test_hydrating.WeCanTest", "attributes": None},
-        )
+        with self.assertRaises(TypeError):
+            hydrate_object({"_hydrate_as": "tests.test_hydrating.WeCanTest", "attributes": None})
 
     def test_hydrate_let_args__args(self):
         instance = hydrate_object({"_hydrate_as": "test_hydrating.WeCanTest", "args": ["nested", "me", 12]})

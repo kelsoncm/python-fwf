@@ -3,9 +3,9 @@ repos:
     rev: v6.0.0
     hooks:
       - id: trailing-whitespace
-        exclude: \.fwf$|tests\/assets\/example01\.rst|tests\/assets\/example01\.rst\.example$
+        exclude: \.fwf$|tests\/assets\/example01\.rst|tests\/assets\/example01\.rst\$
       - id: end-of-file-fixer
-        exclude: \.fwf$|tests\/assets\/example01\.rst|tests\/assets\/example01\.rst\.example$
+        exclude: \.fwf$|tests\/assets\/example01\.rst|tests\/assets\/example01\.rst$
       - id: check-yaml
       - id: check-added-large-files
 
@@ -27,6 +27,7 @@ repos:
     hooks:
       - id: doc8
         args: ["--max-line-length=120"]
+        exclude: tests/assets/example01\.rst
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.48.0
@@ -39,6 +40,13 @@ repos:
         name: pytest
         stages: [pre-push]
         language: system
-        entry: pytest
+        entry: pytest --cov=pyfwf --cov-report=xml:coverage.xml --cov-report=term-missing
+        pass_filenames: false
+        always_run: true
+      - id: pytest-coverage-gate
+        name: pytest-coverage-gate
+        stages: [pre-push]
+        entry: bash -c 'pytest-coverage-gate --coverage-xml=coverage.xml --baseline=.coverage-baseline'
+        language: system
         pass_filenames: false
         always_run: true

@@ -1,28 +1,3 @@
-"""
-The MIT License (MIT)
-
-Copyright 2015 Umbrella Tech.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
-
-__author__ = "Kelson da Costa Medeiros <kelsoncm@gmail.com>"
-
 from datetime import date, datetime, time
 from unittest import TestCase
 
@@ -55,28 +30,34 @@ class TestCharColumn(TestCase):
         self.assertEqual("name", cd2.description)
 
     def test_constructor_wrong_name_arg(self):
-        self.assertRaisesRegex(AssertionError, "name", CharColumn, None, "", "")
-        self.assertRaisesRegex(AssertionError, "name.*branca", CharColumn, "", "", "")
-        self.assertRaisesRegex(AssertionError, "name.*branca", CharColumn, " ", "", "")
+        self.assertRaises(TypeError, CharColumn, None, "", "")
+        self.assertRaises(ValueError, CharColumn, "", "", "")
+        self.assertRaises(ValueError, CharColumn, " ", "", "")
 
     def test_constructor_wrong_size_arg(self):
-        self.assertRaisesRegex(AssertionError, "size", CharColumn, "name", "")
-        self.assertRaisesRegex(AssertionError, "size.*0", CharColumn, "name", 0)
+        self.assertRaises(TypeError, CharColumn, "name", "")
+        self.assertRaises(ValueError, CharColumn, "name", 0)
 
     def test_constructor_wrong_description_arg(self):
-        self.assertRaisesRegex(AssertionError, "description.*string", CharColumn, "name", 1, 1)
-        self.assertRaisesRegex(AssertionError, "description.*string", CharColumn, "name", 1, False)
+        self.assertRaises(TypeError, CharColumn, "name", 1, 1)
+        self.assertRaises(TypeError, CharColumn, "name", 1, False)
 
     def test_end(self):
         cd = CharColumn("name", 2, "desc")
         cd.start = 1
         self.assertEqual(2, cd.end)
+        cd.start = 0
+        with self.assertRaises(ValueError):
+            _ = cd.end
+        cd.start = "a"
+        with self.assertRaises(TypeError):
+            _ = cd.end
 
     def test_to_value_invalid(self):
         cd = CharColumn("name", 2, "desc")
-        self.assertRaisesRegex(AssertionError, "string.*corretamente", cd.to_value, 1)
-        self.assertRaisesRegex(AssertionError, "tamanho do campo", cd.to_value, "1")
-        self.assertRaisesRegex(AssertionError, "tamanho do campo", cd.to_value, "333")
+        self.assertRaises(TypeError, cd.to_value, 1)
+        self.assertRaises(ValueError, cd.to_value, "1")
+        self.assertRaises(ValueError, cd.to_value, "333")
 
     def test_to_value_valid(self):
         cd = CharColumn("name", 2, "desc")
@@ -86,11 +67,11 @@ class TestCharColumn(TestCase):
 
     def test_to_str_invalid(self):
         cd = CharColumn("name", 4, "desc")
-        self.assertRaisesRegex(AssertionError, "'str' or 'None'", cd.to_str, 1)
-        self.assertRaisesRegex(AssertionError, "'str' or 'None'", cd.to_str, 12345)
-        self.assertRaisesRegex(AssertionError, "'str' or 'None'", cd.to_str, True)
-        self.assertRaisesRegex(AssertionError, "diferente de 4", cd.to_str, "12345")
-        self.assertRaisesRegex(AssertionError, "diferente de 4", cd.to_str, "123  ")
+        self.assertRaises(TypeError, cd.to_str, 1)
+        self.assertRaises(TypeError, cd.to_str, 12345)
+        self.assertRaises(TypeError, cd.to_str, True)
+        self.assertRaises(ValueError, cd.to_str, "12345")
+        self.assertRaises(ValueError, cd.to_str, "123  ")
 
     def test_to_str_valid(self):
         cd = CharColumn("name", 4, "desc")
@@ -134,30 +115,36 @@ class TestRightCharColumn(TestCase):
         self.assertEqual("name", cd2.description)
 
     def test_constructor_wrong_name_arg(self):
-        self.assertRaisesRegex(AssertionError, "name", RightCharColumn, None, "a")
-        self.assertRaisesRegex(AssertionError, "name.*branca", RightCharColumn, "", "")
-        self.assertRaisesRegex(AssertionError, "name.*branca", RightCharColumn, " ", "")
+        self.assertRaises(TypeError, RightCharColumn, None, "a")
+        self.assertRaises(ValueError, RightCharColumn, "", "")
+        self.assertRaises(ValueError, RightCharColumn, " ", "")
 
     def test_constructor_wrong_size_arg(self):
-        self.assertRaisesRegex(AssertionError, "size", RightCharColumn, "name", "")
-        self.assertRaisesRegex(AssertionError, "size.*0", RightCharColumn, "name", 0)
+        self.assertRaises(TypeError, RightCharColumn, "name", "")
+        self.assertRaises(ValueError, RightCharColumn, "name", 0)
 
     def test_constructor_wrong_description_arg(self):
-        self.assertRaisesRegex(AssertionError, "description.*string", RightCharColumn, "name", 1, 1)
-        self.assertRaisesRegex(AssertionError, "description.*string", RightCharColumn, "name", 1, False)
+        self.assertRaises(TypeError, RightCharColumn, "name", 1, 1)
+        self.assertRaises(TypeError, RightCharColumn, "name", 1, False)
 
     def test_end(self):
         cd = RightCharColumn("name", 2, "desc")
         cd.start = 1
         self.assertEqual(2, cd.end)
+        cd.start = 0
+        with self.assertRaises(ValueError):
+            _ = cd.end
+        cd.start = "a"
+        with self.assertRaises(TypeError):
+            _ = cd.end
 
     def test_to_value_invalid(self):
         cd = RightCharColumn("name", 2, "desc")
-        self.assertRaisesRegex(AssertionError, "string.*corretamente", cd.to_value, 1)
-        self.assertRaisesRegex(AssertionError, "string", cd.to_value, 12345)
-        self.assertRaisesRegex(AssertionError, "string", cd.to_value, True)
-        self.assertRaisesRegex(AssertionError, "tamanho do campo", cd.to_value, "1")
-        self.assertRaisesRegex(AssertionError, "tamanho do campo", cd.to_value, "333")
+        self.assertRaises(TypeError, cd.to_value, 1)
+        self.assertRaises(TypeError, cd.to_value, 12345)
+        self.assertRaises(TypeError, cd.to_value, True)
+        self.assertRaises(ValueError, cd.to_value, "1")
+        self.assertRaises(ValueError, cd.to_value, "333")
 
     def test_to_value_valid(self):
         cd = RightCharColumn("name", 2, "desc")
@@ -167,11 +154,11 @@ class TestRightCharColumn(TestCase):
 
     def test_to_str_invalid(self):
         cd = RightCharColumn("name", 4, "desc")
-        self.assertRaisesRegex(AssertionError, "'str' or 'None'", cd.to_str, 1)
-        self.assertRaisesRegex(AssertionError, "'str' or 'None'", cd.to_str, 12345)
-        self.assertRaisesRegex(AssertionError, "'str' or 'None'", cd.to_str, True)
-        self.assertRaisesRegex(AssertionError, "diferente de 4", cd.to_str, "12345")
-        self.assertRaisesRegex(AssertionError, "diferente de 4", cd.to_str, "123  ")
+        self.assertRaises(TypeError, cd.to_str, 1)
+        self.assertRaises(TypeError, cd.to_str, 12345)
+        self.assertRaises(TypeError, cd.to_str, True)
+        self.assertRaises(ValueError, cd.to_str, "12345")
+        self.assertRaises(ValueError, cd.to_str, "123  ")
 
     def test_to_str_valid(self):
         cd = RightCharColumn("name", 4, "desc")
@@ -218,24 +205,17 @@ class TestPositiveIntegerColumn(TestCase):
         self.assertEqual(cd2.name, cd2.description)
 
     def test_constructor_wrong_name_arg(self):
-        self.assertRaisesRegex(AssertionError, "name", PositiveIntegerColumn, None, "a", "a")
-        self.assertRaisesRegex(AssertionError, "name.*branca", PositiveIntegerColumn, "", "", "")
-        self.assertRaisesRegex(AssertionError, "name.*branca", PositiveIntegerColumn, " ", "", "")
+        self.assertRaises(TypeError, PositiveIntegerColumn, None, "a", "a")
+        self.assertRaises(ValueError, PositiveIntegerColumn, "", "", "")
+        self.assertRaises(ValueError, PositiveIntegerColumn, " ", "", "")
 
     def test_constructor_wrong_size_arg(self):
-        self.assertRaisesRegex(AssertionError, "size", PositiveIntegerColumn, "name", "")
-        self.assertRaisesRegex(AssertionError, "size.*0", PositiveIntegerColumn, "name", 0)
+        self.assertRaises(TypeError, PositiveIntegerColumn, "name", "")
+        self.assertRaises(ValueError, PositiveIntegerColumn, "name", 0)
 
     def test_constructor_wrong_description_arg(self):
-        self.assertRaisesRegex(AssertionError, "description.*string", PositiveIntegerColumn, "name", 1, 1)
-        self.assertRaisesRegex(
-            AssertionError,
-            "description.*string",
-            PositiveIntegerColumn,
-            "name",
-            1,
-            False,
-        )
+        self.assertRaises(TypeError, PositiveIntegerColumn, "name", 1, 1)
+        self.assertRaises(TypeError, PositiveIntegerColumn, "name", 1, False)
 
     def test_end(self):
         cd = PositiveIntegerColumn("name", 2, "desc")
@@ -244,12 +224,12 @@ class TestPositiveIntegerColumn(TestCase):
 
     def test_to_value_invalid(self):
         cd = PositiveIntegerColumn("name", 2, "desc")
-        self.assertRaisesRegex(AssertionError, "string.*corretamente", cd.to_value, 12)
-        self.assertRaisesRegex(AssertionError, "string.*corretamente", cd.to_value, True)
-        self.assertRaisesRegex(AssertionError, "tamanho do campo", cd.to_value, "1")
-        self.assertRaisesRegex(AssertionError, "positive int", cd.to_value, "-1")
-        self.assertRaisesRegex(AssertionError, "tamanho do campo", cd.to_value, "333")
-        self.assertRaisesRegex(ValueError, "invalid literal for int", cd.to_value, "A1")
+        self.assertRaises(TypeError, cd.to_value, 12)
+        self.assertRaises(TypeError, cd.to_value, True)
+        self.assertRaises(ValueError, cd.to_value, "1")
+        self.assertRaises(ValueError, cd.to_value, "-1")
+        self.assertRaises(ValueError, cd.to_value, "333")
+        self.assertRaises(ValueError, cd.to_value, "A1")
 
     def test_to_value_valid(self):
         cd = PositiveIntegerColumn("name", 2, "desc")
@@ -259,12 +239,12 @@ class TestPositiveIntegerColumn(TestCase):
 
     def test_to_str_invalid(self):
         cd = PositiveIntegerColumn("name", 4, "desc")
-        self.assertRaisesRegex(AssertionError, "'positive int' or 'None'", cd.to_str, "1")
-        self.assertRaisesRegex(AssertionError, "'positive int' or 'None'", cd.to_str, "-123")
-        self.assertRaisesRegex(AssertionError, "'positive int' or 'None'", cd.to_str, "12345")
-        self.assertRaisesRegex(AssertionError, "'positive int' or 'None'", cd.to_str, True)
-        self.assertRaisesRegex(AssertionError, "'positive int' or 'None'", cd.to_str, -1)
-        self.assertRaisesRegex(AssertionError, "diferente de 4", cd.to_str, 12345)
+        self.assertRaises(TypeError, cd.to_str, "1")
+        self.assertRaises(TypeError, cd.to_str, "-123")
+        self.assertRaises(TypeError, cd.to_str, "12345")
+        self.assertRaises(TypeError, cd.to_str, True)
+        self.assertRaises(TypeError, cd.to_str, -1)
+        self.assertRaises(ValueError, cd.to_str, 12345)
 
     def test_to_str_valid(self):
         cd = PositiveIntegerColumn("name", 4, "year")
@@ -309,55 +289,25 @@ class TestPositiveDecimalColumn(TestCase):
         self.assertEqual("value", cd2.description)
 
     def test_constructor_wrong_name_arg(self):
-        self.assertRaisesRegex(AssertionError, "name", PositiveDecimalColumn, None, "a", "a")
-        self.assertRaisesRegex(AssertionError, "name.*branca", PositiveDecimalColumn, "", "", "")
-        self.assertRaisesRegex(AssertionError, "name.*branca", PositiveDecimalColumn, " ", "", "")
+        self.assertRaises(TypeError, PositiveDecimalColumn, None, "a", "a")
+        self.assertRaises(ValueError, PositiveDecimalColumn, "", "", "")
+        self.assertRaises(ValueError, PositiveDecimalColumn, " ", "", "")
 
     def test_constructor_wrong_size_arg(self):
-        self.assertRaisesRegex(AssertionError, "size", PositiveDecimalColumn, "name", "")
-        self.assertRaisesRegex(AssertionError, "size.*0", PositiveDecimalColumn, "name", 0)
+        self.assertRaises(TypeError, PositiveDecimalColumn, "name", "")
+        self.assertRaises(ValueError, PositiveDecimalColumn, "name", 0)
 
     def test_constructor_wrong_decimals_args(self):
-        self.assertRaisesRegex(AssertionError, "decimais.*inteiro", PositiveDecimalColumn, "name", 1, "1")
-        self.assertRaisesRegex(
-            AssertionError,
-            "decimais.*maior que 0",
-            PositiveDecimalColumn,
-            "value",
-            1,
-            0,
-        )
-        self.assertRaisesRegex(AssertionError, "decimais.*size", PositiveDecimalColumn, "value", 1)
-        self.assertRaisesRegex(AssertionError, "decimais.*size", PositiveDecimalColumn, "value", 1, 2)
-        self.assertRaisesRegex(AssertionError, "decimais.*size", PositiveDecimalColumn, "value", 1, 1)
-        self.assertRaisesRegex(
-            AssertionError,
-            "decimais.*maior que 0",
-            PositiveDecimalColumn,
-            "value",
-            1,
-            0,
-        )
+        self.assertRaises(TypeError, PositiveDecimalColumn, "name", 1, "1")
+        self.assertRaises(ValueError, PositiveDecimalColumn, "value", 1, 0)
+        self.assertRaises(ValueError, PositiveDecimalColumn, "value", 1)
+        self.assertRaises(ValueError, PositiveDecimalColumn, "value", 1, 2)
+        self.assertRaises(ValueError, PositiveDecimalColumn, "value", 1, 1)
+        self.assertRaises(ValueError, PositiveDecimalColumn, "value", 1, 0)
 
     def test_constructor_wrong_description_arg(self):
-        self.assertRaisesRegex(
-            AssertionError,
-            "description.*string",
-            PositiveDecimalColumn,
-            "name",
-            3,
-            1,
-            -1,
-        )
-        self.assertRaisesRegex(
-            AssertionError,
-            "description.*string",
-            PositiveDecimalColumn,
-            "name",
-            3,
-            1,
-            False,
-        )
+        self.assertRaises(TypeError, PositiveDecimalColumn, "name", 3, 1, -1)
+        self.assertRaises(TypeError, PositiveDecimalColumn, "name", 3, 1, False)
 
     def test_end(self):
         cd = PositiveDecimalColumn("name", 2, 1, "desc")
@@ -366,13 +316,13 @@ class TestPositiveDecimalColumn(TestCase):
 
     def test_to_value_invalid(self):
         cd = PositiveDecimalColumn("name", 2, 1, "desc")
-        self.assertRaisesRegex(AssertionError, "string.*corretamente", cd.to_value, 12)
-        self.assertRaisesRegex(AssertionError, "string.*corretamente", cd.to_value, -1.0)
-        self.assertRaisesRegex(AssertionError, "string.*corretamente", cd.to_value, True)
-        self.assertRaisesRegex(AssertionError, "tamanho do campo", cd.to_value, "1")
-        self.assertRaisesRegex(AssertionError, "positive decimal", cd.to_value, "-1")
-        self.assertRaisesRegex(AssertionError, "tamanho do campo", cd.to_value, "333")
-        self.assertRaisesRegex(ValueError, "invalid literal for int", cd.to_value, "A1")
+        self.assertRaises(TypeError, cd.to_value, 12)
+        self.assertRaises(TypeError, cd.to_value, -1.0)
+        self.assertRaises(TypeError, cd.to_value, True)
+        self.assertRaises(ValueError, cd.to_value, "1")
+        self.assertRaises(ValueError, cd.to_value, "-1")
+        self.assertRaises(ValueError, cd.to_value, "333")
+        self.assertRaises(ValueError, cd.to_value, "A1")
 
     def test_to_value_valid(self):
         cd = PositiveDecimalColumn("value", 3, 2)
@@ -383,14 +333,14 @@ class TestPositiveDecimalColumn(TestCase):
 
     def test_to_str_invalid(self):
         cd = PositiveDecimalColumn("value", 4, 2)
-        self.assertRaisesRegex(AssertionError, "'positive decimal' or 'None'", cd.to_str, "1")
-        self.assertRaisesRegex(AssertionError, "'positive decimal' or 'None'", cd.to_str, "-123")
-        self.assertRaisesRegex(AssertionError, "'positive decimal' or 'None'", cd.to_str, "12345")
-        self.assertRaisesRegex(AssertionError, "'positive decimal' or 'None'", cd.to_str, True)
-        self.assertRaisesRegex(AssertionError, "'positive decimal' or 'None'", cd.to_str, -1)
-        self.assertRaisesRegex(AssertionError, "diferente de 4", cd.to_str, 123.45)
-        self.assertRaisesRegex(AssertionError, "diferente de 4", cd.to_str, 123.0)
-        self.assertRaisesRegex(AssertionError, "diferente de 4", cd.to_str, 1234.0)
+        self.assertRaises(TypeError, cd.to_str, "1")
+        self.assertRaises(TypeError, cd.to_str, "-123")
+        self.assertRaises(TypeError, cd.to_str, "12345")
+        self.assertRaises(TypeError, cd.to_str, True)
+        self.assertRaises(TypeError, cd.to_str, -1)
+        self.assertRaises(ValueError, cd.to_str, 123.45)
+        self.assertRaises(ValueError, cd.to_str, 123.0)
+        self.assertRaises(ValueError, cd.to_str, 1234.0)
 
     def test_to_str_valid(self):
         cd = PositiveDecimalColumn("value", 4)
@@ -437,26 +387,19 @@ class TestDateTimeColumn(TestCase):
         self.assertEqual("dt", cd2.description)
 
     def test_constructor_wrong_name_arg(self):
-        self.assertRaisesRegex(AssertionError, "name", DateTimeColumn, None, "a", "a")
-        self.assertRaisesRegex(AssertionError, "name.*branca", DateTimeColumn, "", "")
-        self.assertRaisesRegex(AssertionError, "name.*branca", DateTimeColumn, " ", "")
+        self.assertRaises(TypeError, DateTimeColumn, None, "a", "a")
+        self.assertRaises(ValueError, DateTimeColumn, "", "")
+        self.assertRaises(ValueError, DateTimeColumn, " ", "")
 
-    def test_constructor_wrong_format_args(self):
-        self.assertRaisesRegex(AssertionError, "_format.*string", DateTimeColumn, "dt", 0)
-        self.assertRaisesRegex(AssertionError, "_format.*string", DateTimeColumn, "dt", None)
-        self.assertRaisesRegex(AssertionError, "_format.*não branca", DateTimeColumn, "dt", "")
-        self.assertRaisesRegex(AssertionError, "_format.*não branca", DateTimeColumn, "dt", " ")
-        self.assertRaisesRegex(AssertionError, "_format.*válido", DateTimeColumn, "dt", "%d%m%Y%H")
+    def test_constructor_wrong_format_arg(self):
+        self.assertRaises(TypeError, DateTimeColumn, "dt", None)
+        self.assertRaises(ValueError, DateTimeColumn, "dt", "")
+        self.assertRaises(ValueError, DateTimeColumn, "dt", " ")
+        self.assertRaises(ValueError, DateTimeColumn, "dt", "%d%m%Y%H")
 
     def test_constructor_wrong_description_arg(self):
-        self.assertRaisesRegex(AssertionError, "description.*string", DateTimeColumn, "dt", description=1)
-        self.assertRaisesRegex(
-            AssertionError,
-            "description.*string",
-            DateTimeColumn,
-            "dt",
-            description=False,
-        )
+        self.assertRaises(TypeError, DateTimeColumn, "dt", description=1)
+        self.assertRaises(TypeError, DateTimeColumn, "dt", description=False)
 
     def test_end(self):
         cd = DateTimeColumn("dt")
@@ -465,11 +408,11 @@ class TestDateTimeColumn(TestCase):
 
     def test_to_value_invalid(self):
         cd = DateTimeColumn("dt")
-        self.assertRaisesRegex(AssertionError, "string.*corretamente", cd.to_value, 12)
-        self.assertRaisesRegex(AssertionError, "string.*corretamente", cd.to_value, -1.0)
-        self.assertRaisesRegex(AssertionError, "string.*corretamente", cd.to_value, True)
-        self.assertRaisesRegex(AssertionError, "tamanho do campo", cd.to_value, "1")
-        self.assertRaisesRegex(ValueError, "valor.*inválido.*formato", cd.to_value, "310220010000")
+        self.assertRaises(TypeError, cd.to_value, 12)
+        self.assertRaises(TypeError, cd.to_value, -1.0)
+        self.assertRaises(TypeError, cd.to_value, True)
+        self.assertRaises(ValueError, cd.to_value, "1")
+        self.assertRaises(ValueError, cd.to_value, "310220010000")
 
     def test_to_value_valid(self):
         cd = DateTimeColumn("dt")
@@ -480,13 +423,13 @@ class TestDateTimeColumn(TestCase):
 
     def test_to_str_invalid(self):
         cd = DateTimeColumn("dt")
-        self.assertRaisesRegex(AssertionError, "'datetime' or 'None'", cd.to_str, 1)
-        self.assertRaisesRegex(AssertionError, "'datetime' or 'None'", cd.to_str, 1.1)
-        self.assertRaisesRegex(AssertionError, "'datetime' or 'None'", cd.to_str, False)
-        self.assertRaisesRegex(AssertionError, "'datetime' or 'None'", cd.to_str, "123")
-        self.assertRaisesRegex(AssertionError, "'datetime' or 'None'", cd.to_str, "1234567890123")
-        self.assertRaisesRegex(AssertionError, "'datetime' or 'None'", cd.to_str, date.today())
-        self.assertRaisesRegex(AssertionError, "'datetime' or 'None'", cd.to_str, datetime.now().time())
+        self.assertRaises(TypeError, cd.to_str, 1)
+        self.assertRaises(TypeError, cd.to_str, 1.1)
+        self.assertRaises(TypeError, cd.to_str, False)
+        self.assertRaises(TypeError, cd.to_str, "123")
+        self.assertRaises(TypeError, cd.to_str, "1234567890123")
+        self.assertRaises(TypeError, cd.to_str, date.today())
+        self.assertRaises(TypeError, cd.to_str, datetime.now().time())
 
     def test_to_str_valid(self):
         self.assertEqual("280220012359", DateTimeColumn("dt").to_str(datetime(2001, 2, 28, 23, 59)))
@@ -539,20 +482,20 @@ class TestDateColumn(TestCase):
         self.assertEqual("dt", cd2.description)
 
     def test_constructor_wrong_name_arg(self):
-        self.assertRaisesRegex(AssertionError, "name", DateColumn, None, "a", "a")
-        self.assertRaisesRegex(AssertionError, "name.*branca", DateColumn, "", "")
-        self.assertRaisesRegex(AssertionError, "name.*branca", DateColumn, " ", "")
+        self.assertRaises(TypeError, DateColumn, None, "a", "a")
+        self.assertRaises(ValueError, DateColumn, "", "")
+        self.assertRaises(ValueError, DateColumn, " ", "")
 
     def test_constructor_wrong_format_args(self):
-        self.assertRaisesRegex(AssertionError, "_format.*string", DateColumn, "name", 0)
-        self.assertRaisesRegex(AssertionError, "_format.*string", DateColumn, "name", None)
-        self.assertRaisesRegex(AssertionError, "_format.*não branca", DateColumn, "name", "")
-        self.assertRaisesRegex(AssertionError, "_format.*não branca", DateColumn, "name", " ")
-        self.assertRaisesRegex(AssertionError, "_format.*válido", DateColumn, "name", "%d%m%Y%H")
+        self.assertRaises(TypeError, DateColumn, "name", 0)
+        self.assertRaises(TypeError, DateColumn, "name", None)
+        self.assertRaises(ValueError, DateColumn, "name", "")
+        self.assertRaises(ValueError, DateColumn, "name", " ")
+        self.assertRaises(ValueError, DateColumn, "name", "%d%m%Y%H")
 
     def test_constructor_wrong_description_arg(self):
-        self.assertRaisesRegex(AssertionError, "description.*string", DateColumn, "dt", description=1)
-        self.assertRaisesRegex(AssertionError, "description.*string", DateColumn, "dt", description=False)
+        self.assertRaises(TypeError, DateColumn, "dt", description=1)
+        self.assertRaises(TypeError, DateColumn, "dt", description=False)
 
     def test_end(self):
         cd = DateColumn("dt")
@@ -561,11 +504,11 @@ class TestDateColumn(TestCase):
 
     def test_to_value_invalid(self):
         cd = DateColumn("dt")
-        self.assertRaisesRegex(AssertionError, "string.*corretamente", cd.to_value, 12)
-        self.assertRaisesRegex(AssertionError, "string.*corretamente", cd.to_value, -1.0)
-        self.assertRaisesRegex(AssertionError, "string.*corretamente", cd.to_value, True)
-        self.assertRaisesRegex(AssertionError, "tamanho do campo", cd.to_value, "1")
-        self.assertRaisesRegex(ValueError, "valor.*inválido.*formato", cd.to_value, "12345678")
+        self.assertRaises(TypeError, cd.to_value, 12)
+        self.assertRaises(TypeError, cd.to_value, -1.0)
+        self.assertRaises(TypeError, cd.to_value, True)
+        self.assertRaises(ValueError, cd.to_value, "1")
+        self.assertRaises(ValueError, cd.to_value, "12345678")
 
     def test_to_value_valid(self):
         self.assertEqual(date(2001, 2, 28), DateColumn("dt").to_value("28022001"))
@@ -573,12 +516,12 @@ class TestDateColumn(TestCase):
 
     def test_to_str_invalid(self):
         cd = DateColumn("dt")
-        self.assertRaisesRegex(AssertionError, "'date' or 'None'", cd.to_str, 1)
-        self.assertRaisesRegex(AssertionError, "'date' or 'None'", cd.to_str, 1.1)
-        self.assertRaisesRegex(AssertionError, "'date' or 'None'", cd.to_str, False)
-        self.assertRaisesRegex(AssertionError, "'date' or 'None'", cd.to_str, "123")
-        self.assertRaisesRegex(AssertionError, "'date' or 'None'", cd.to_str, "1234567890123")
-        self.assertRaisesRegex(AssertionError, "'date' or 'None'", cd.to_str, datetime.now().time())
+        self.assertRaises(TypeError, cd.to_str, 1)
+        self.assertRaises(TypeError, cd.to_str, 1.1)
+        self.assertRaises(TypeError, cd.to_str, False)
+        self.assertRaises(TypeError, cd.to_str, "123")
+        self.assertRaises(TypeError, cd.to_str, "1234567890123")
+        self.assertRaises(TypeError, cd.to_str, datetime.now().time())
 
     def test_to_str_valid(self):
         self.assertEqual("28022001", DateColumn("dt").to_str(date(2001, 2, 28)))
@@ -627,20 +570,20 @@ class TestTimeColumn(TestCase):
         self.assertEqual("time", cd2.description)
 
     def test_constructor_wrong_name_arg(self):
-        self.assertRaisesRegex(AssertionError, "name", TimeColumn, None, "a", "a")
-        self.assertRaisesRegex(AssertionError, "name.*branca", TimeColumn, "", "")
-        self.assertRaisesRegex(AssertionError, "name.*branca", TimeColumn, " ", "")
+        self.assertRaises(TypeError, TimeColumn, None, "a", "a")
+        self.assertRaises(ValueError, TimeColumn, "", "")
+        self.assertRaises(ValueError, TimeColumn, " ", "")
 
     def test_constructor_wrong_format_args(self):
-        self.assertRaisesRegex(AssertionError, "_format.*string", TimeColumn, "time", 0)
-        self.assertRaisesRegex(AssertionError, "_format.*string", TimeColumn, "time", None)
-        self.assertRaisesRegex(AssertionError, "_format.*não branca", TimeColumn, "time", "")
-        self.assertRaisesRegex(AssertionError, "_format.*não branca", TimeColumn, "time", " ")
-        self.assertRaisesRegex(AssertionError, "_format.*válido", TimeColumn, "time", "%d%m%Y%H")
+        self.assertRaises(TypeError, TimeColumn, "time", 0)
+        self.assertRaises(TypeError, TimeColumn, "time", None)
+        self.assertRaises(ValueError, TimeColumn, "time", "")
+        self.assertRaises(ValueError, TimeColumn, "time", " ")
+        self.assertRaises(ValueError, TimeColumn, "time", "%d%m%Y%H")
 
     def test_constructor_wrong_description_arg(self):
-        self.assertRaisesRegex(AssertionError, "description.*string", TimeColumn, "time", description=1)
-        self.assertRaisesRegex(AssertionError, "description.*string", TimeColumn, "time", description=False)
+        self.assertRaises(TypeError, TimeColumn, "time", description=1)
+        self.assertRaises(TypeError, TimeColumn, "time", description=False)
 
     def test_end(self):
         cd = TimeColumn("time")
@@ -653,11 +596,11 @@ class TestTimeColumn(TestCase):
 
     def test_to_value_invalid(self):
         cd = TimeColumn("time")
-        self.assertRaisesRegex(AssertionError, "string.*corretamente", cd.to_value, 12)
-        self.assertRaisesRegex(AssertionError, "string.*corretamente", cd.to_value, -1.0)
-        self.assertRaisesRegex(AssertionError, "string.*corretamente", cd.to_value, True)
-        self.assertRaisesRegex(AssertionError, "tamanho do campo", cd.to_value, "1")
-        self.assertRaisesRegex(ValueError, "valor.*inválido.*formato", cd.to_value, "7894")
+        self.assertRaises(TypeError, cd.to_value, 12)
+        self.assertRaises(TypeError, cd.to_value, -1.0)
+        self.assertRaises(TypeError, cd.to_value, True)
+        self.assertRaises(ValueError, cd.to_value, "1")
+        self.assertRaises(ValueError, cd.to_value, "7894")
 
     def test_to_value_valid(self):
         self.assertEqual(time(23, 59), TimeColumn("time").to_value("2359"))
@@ -665,12 +608,12 @@ class TestTimeColumn(TestCase):
 
     def test_to_str_invalid(self):
         cd = TimeColumn("time")
-        self.assertRaisesRegex(AssertionError, "'time' or 'None'", cd.to_str, 1)
-        self.assertRaisesRegex(AssertionError, "'time' or 'None'", cd.to_str, 1.1)
-        self.assertRaisesRegex(AssertionError, "'time' or 'None'", cd.to_str, False)
-        self.assertRaisesRegex(AssertionError, "'time' or 'None'", cd.to_str, "123")
-        self.assertRaisesRegex(AssertionError, "'time' or 'None'", cd.to_str, "1234567890123")
-        self.assertRaisesRegex(AssertionError, "'time' or 'None'", cd.to_str, date.today())
+        self.assertRaises(TypeError, cd.to_str, 1)
+        self.assertRaises(TypeError, cd.to_str, 1.1)
+        self.assertRaises(TypeError, cd.to_str, False)
+        self.assertRaises(TypeError, cd.to_str, "123")
+        self.assertRaises(TypeError, cd.to_str, "1234567890123")
+        self.assertRaises(TypeError, cd.to_str, date.today())
 
     def test_to_str_valid(self):
         self.assertEqual("2359", TimeColumn("time").to_str(time(23, 59)))

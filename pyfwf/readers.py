@@ -26,7 +26,7 @@ __author__ = "Kelson da Costa Medeiros <kelsoncm@gmail.com>"
 
 from collections import abc
 from io import StringIO, TextIOWrapper
-from typing import Iterable, List
+from typing import Iterable
 
 from .descriptors import FileDescriptor
 
@@ -40,13 +40,12 @@ class Reader:
         file_descriptor: FileDescriptor,
         newline: str = "\n\r",
     ):
-        assert isinstance(_iterable, abc.Iterable), "O argumento _iterable tem que ser um Iterator"
-        assert isinstance(file_descriptor, FileDescriptor), "O argumento file_descriptor tem que ser um FileDescriptor"
-        assert isinstance(newline, str) and newline in [
-            "\n",
-            "\r",
-            "\n\r",
-        ], 'O argumento newline tem que ser uma str e conter "\\n", "\\r" ou "\\n\\r"'
+        if not isinstance(_iterable, abc.Iterable):
+            raise TypeError("O argumento _iterable tem que ser um Iterator")
+        if not isinstance(file_descriptor, FileDescriptor):
+            raise TypeError("O argumento file_descriptor tem que ser um FileDescriptor")
+        if not (isinstance(newline, str) and newline in ["\n", "\r", "\n\r"]):
+            raise ValueError('O argumento newline tem que ser uma str e conter "\\n", "\\r" ou "\\n\\r"')
 
         self.iterable = _iterable
         self.file_descriptor = file_descriptor
@@ -61,23 +60,24 @@ class Reader:
         elif isinstance(self.iterable, str):
             self.filesize = len(self.iterable)
             self.iterable = StringIO(self.iterable)
-        elif isinstance(self.iterable, List):
+        elif isinstance(self.iterable, list):
             self.iterable = iter(_iterable)
             self.lines_count = len(_iterable)
             self.filesize = sum([len(r) for r in _iterable])
         else:
             raise TypeError("Unsupported Iterable")
 
-        assert float(self.filesize) % float(self.file_descriptor.line_size + len(self.newline)) == 0, (
-            "Algumas linha não tem o tamanho correto (%d) ou não tem a quebra de linha adequada (%s), "
-            "total de bytes %d e total de linhas %f"
-            % (
-                self.file_descriptor.line_size,
-                self.newline.replace("\n", "\\n").replace("\r", "\\r"),
-                self.filesize,
-                float(self.filesize) / float(self.file_descriptor.line_size + len(self.newline)),
+        if float(self.filesize) % float(self.file_descriptor.line_size + len(self.newline)) != 0:
+            raise ValueError(
+                "Algumas linha não tem o tamanho correto (%d) ou não tem a quebra de linha adequada (%s), "
+                "total de bytes %d e total de linhas %f"
+                % (
+                    self.file_descriptor.line_size,
+                    self.newline.replace("\n", "\\n").replace("\r", "\\r"),
+                    self.filesize,
+                    float(self.filesize) / float(self.file_descriptor.line_size + len(self.newline)),
+                )
             )
-        )
         self.lines_count = self.filesize / (self.file_descriptor.line_size + len(self.newline))
 
     def __iter__(self):

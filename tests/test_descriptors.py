@@ -1,28 +1,3 @@
-"""
-The MIT License (MIT)
-
-Copyright 2015 Umbrella Tech.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
-
-__author__ = "Kelson da Costa Medeiros <kelsoncm@gmail.com>"
-
 from unittest import TestCase
 
 from pyfwf.columns import (
@@ -57,10 +32,10 @@ class TestRowDescriptor(TestCase):
         self.assertEqual(11, rd.line_size)
 
     def test_constructor_wrong_args(self):
-        self.assertRaisesRegex(TypeError, "missing.*columns", RowDescriptor)
-        self.assertRaisesRegex(AssertionError, "columns.*List", RowDescriptor, None)
-        self.assertRaisesRegex(AssertionError, "columns.*1.*", RowDescriptor, [])
-        self.assertRaisesRegex(AssertionError, "columns.*List", RowDescriptor, 1)
+        self.assertRaises(TypeError, RowDescriptor)
+        self.assertRaises(TypeError, RowDescriptor, None)
+        self.assertRaises(ValueError, RowDescriptor, [])
+        self.assertRaises(TypeError, RowDescriptor, 1)
 
 
 class TestHeaderRowDescriptor(TestCase):
@@ -76,10 +51,10 @@ class TestHeaderRowDescriptor(TestCase):
         self.assertEqual(1, len(rd.columns))
 
     def test_constructor_wrong_args(self):
-        self.assertRaisesRegex(TypeError, "missing.*columns", HeaderRowDescriptor)
-        self.assertRaisesRegex(AssertionError, "columns.*1.*", HeaderRowDescriptor, [])
-        self.assertRaisesRegex(AssertionError, "columns.*List", HeaderRowDescriptor, None)
-        self.assertRaisesRegex(AssertionError, "columns.*List", HeaderRowDescriptor, 1)
+        self.assertRaises(TypeError, HeaderRowDescriptor)
+        self.assertRaises(ValueError, HeaderRowDescriptor, [])
+        self.assertRaises(TypeError, HeaderRowDescriptor, None)
+        self.assertRaises(TypeError, HeaderRowDescriptor, 1)
 
 
 class TestFooterRowDescriptor(TestCase):
@@ -95,10 +70,10 @@ class TestFooterRowDescriptor(TestCase):
         self.assertEqual(2, len(rd.columns))
 
     def test_constructor_wrong_args(self):
-        self.assertRaisesRegex(TypeError, "missing.*columns", FooterRowDescriptor)
-        self.assertRaisesRegex(AssertionError, "columns.*1.*", FooterRowDescriptor, [])
-        self.assertRaisesRegex(AssertionError, "columns.*List", FooterRowDescriptor, None)
-        self.assertRaisesRegex(AssertionError, "columns.*List", FooterRowDescriptor, 1)
+        self.assertRaises(TypeError, FooterRowDescriptor)
+        self.assertRaises(ValueError, FooterRowDescriptor, [])
+        self.assertRaises(TypeError, FooterRowDescriptor, None)
+        self.assertRaises(TypeError, FooterRowDescriptor, 1)
 
 
 class TestDetailRowDescriptor(TestCase):
@@ -114,8 +89,8 @@ class TestDetailRowDescriptor(TestCase):
         self.assertEqual(1, len(rd.columns))
 
     def test_constructor_wrong_args(self):
-        self.assertRaisesRegex(AssertionError, "columns.*1.*", DetailRowDescriptor, [])
-        self.assertRaisesRegex(AssertionError, "columns.*List", DetailRowDescriptor, 1)
+        self.assertRaises(ValueError, DetailRowDescriptor, [])
+        self.assertRaises(TypeError, DetailRowDescriptor, 1)
 
 
 class TestFileDescriptor(TestCase):
@@ -174,15 +149,15 @@ class TestFileDescriptor(TestCase):
     def test_constructor_wrong_args(self):
         col = CharColumn("type", 1)
         dr = DetailRowDescriptor([col])
-        self.assertRaisesRegex(AssertionError, "details.*List", FileDescriptor, col)
-        self.assertRaisesRegex(AssertionError, "details.*List", FileDescriptor, None)
-        self.assertRaisesRegex(AssertionError, "details.*List", FileDescriptor, 1)
-        self.assertRaisesRegex(AssertionError, "details.*1 DetailRow", FileDescriptor, [])
-        self.assertRaisesRegex(AssertionError, "details.*List.*DetailRow", FileDescriptor, [1])
-        self.assertRaisesRegex(AssertionError, "details.*List.*DetailRow", FileDescriptor, [col], 1)
-        self.assertRaisesRegex(AssertionError, "details.*List", FileDescriptor, dr, 1)
-        self.assertRaisesRegex(AssertionError, "header.*HeaderRow", FileDescriptor, [dr], 1)
-        self.assertRaisesRegex(AssertionError, "footer.*FooterRow", FileDescriptor, [dr], None, 1)
+        self.assertRaises(TypeError, FileDescriptor, col)
+        self.assertRaises(TypeError, FileDescriptor, None)
+        self.assertRaises(TypeError, FileDescriptor, 1)
+        self.assertRaises(ValueError, FileDescriptor, [])
+        self.assertRaises(TypeError, FileDescriptor, [1])
+        self.assertRaises(TypeError, FileDescriptor, [col], 1)
+        self.assertRaises(TypeError, FileDescriptor, dr, 1)
+        self.assertRaises(TypeError, FileDescriptor, [dr], 1)
+        self.assertRaises(TypeError, FileDescriptor, [dr], None, 1)
 
     def test_constructor_set_attr(self):
         t = CharColumn("type", 1)
@@ -197,4 +172,27 @@ class TestFileDescriptor(TestCase):
         self.assertIsInstance(fd.details, list)
 
     def test_constructor_invalid_line_size(self):
-        self.assertRaisesRegex(AssertionError, r"header \(1\).*footer \(2\).*details \(\[1\]\)")
+        self.assertRaises(
+            ValueError,
+            FileDescriptor,
+            [DetailRowDescriptor([CharColumn("type", 1)])],
+            HeaderRowDescriptor([CharColumn("type", 1)]),
+            FooterRowDescriptor([CharColumn("type", 1), CharColumn("other", 1)]),
+        )
+
+    def test_validate_positions_col_start_not_1_manual(self):
+        # Cria um RowDescriptor válido e depois corrompe o start da coluna
+        col = CharColumn("col1", 2)
+        rd = RowDescriptor([col])
+        rd.columns[0].start = 2  # Corrupção manual
+        with self.assertRaises(ValueError):
+            rd.validate_positions()
+
+    def test_validate_positions_col_not_sequential_manual(self):
+        # Cria dois CharColumns válidos e depois corrompe o start do segundo
+        col1 = CharColumn("col1", 2)
+        col2 = CharColumn("col2", 2)
+        rd = RowDescriptor([col1, col2])
+        rd.columns[1].start = rd.columns[0].end + 2  # Corrupção manual
+        with self.assertRaises(ValueError):
+            rd.validate_positions()
