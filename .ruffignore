@@ -1,2 +1,2 @@
 # Ignore all .fwf files in all folders
-*.fwf
+**/*.fwf

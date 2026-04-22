@@ -44,6 +44,7 @@ show_missing = true
 [tool.ruff]
 line-length = 120
 exclude = ["*.fwf"]
+force-exclude = true
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I"]
