@@ -43,7 +43,6 @@ show_missing = true
 
 [tool.ruff]
 line-length = 120
-
 exclude = ["*.fwf"]
 
 [tool.ruff.lint]
@@ -51,7 +50,7 @@ select = ["E", "F", "W", "I"]
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["pyfwf*"]
+include = ["pyfwf"]
 
 [tool.black]
 exclude = '\\.fwf$'
