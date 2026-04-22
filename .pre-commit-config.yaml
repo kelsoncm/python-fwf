@@ -9,11 +9,16 @@ repos:
       - id: check-yaml
       - id: check-added-large-files
 
-
   - repo: https://github.com/psf/black
     rev: 24.3.0
     hooks:
       - id: black
+        exclude: \.fwf$
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
         exclude: \.fwf$
 
   - repo: https://github.com/astral-sh/ruff-pre-commit

@@ -68,8 +68,8 @@ jobs:
 
       - name: Install CI tools
         run: |
-          python -m pip install --upgrade pip
-          pip install flake8 flake8-bandit flake8-pyproject pytest pytest-cov pytest-coverage-gate
+          python -m pip install --upgrade pip uv
+          uv pip install --system --upgrade -e ".[dev]"
 
       - name: Install project dependencies
         run: pip install -e .
