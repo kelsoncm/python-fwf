@@ -2,7 +2,7 @@
 
 [![Python](https://img.shields.io/pypi/pyversions/pyfwf.svg)](https://pypi.org/project/pyfwf/)
 [![PyPI Deploy](https://github.com/kelsoncm/python-pyfwf/actions/workflows/publish.yml/badge.svg)](https://github.com/kelsoncm/python-pyfwf/actions/workflows/publish.yml)
-[![Tests](https://github.com/kelsoncm/python-pyfwf/actions/workflows/test.yml/badge.svg)](https://github.com/kelsoncm/python-fpyfwff/actions/workflows/test.yml)
+[![Tests](https://github.com/kelsoncm/python-pyfwf/actions/workflows/qa.yml/badge.svg)](https://github.com/kelsoncm/python-pyfwf/actions/workflows/qa.yml)
 [![Coverage](https://codecov.io/gh/kelsoncm/python-pyfwf/branch/main/graph/badge.svg)](https://codecov.io/gh/kelsoncm/python-pyfwf)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)

@@ -7,8 +7,8 @@ Python library for reading and manipulating **fixed-width files (FWF)**.
    :target: https://github.com/kelsoncm/python-pyfwf
    :alt: GitHub Repository
 
-.. image:: https://github.com/kelsoncm/python-pyfwf/actions/workflows/test.yml/badge.svg
-   :target: https://github.com/kelsoncm/python-pyfwf/actions/workflows/test.yml
+.. image:: https://github.com/kelsoncm/python-pyfwf/actions/workflows/qa.yml/badge.svg
+   :target: https://github.com/kelsoncm/python-pyfwf/actions/workflows/qa.yml
    :alt: Test status
 
 .. image:: https://codecov.io/gh/kelsoncm/python-pyfwf/branch/main/graph/badge.svg
