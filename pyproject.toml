@@ -33,9 +33,6 @@ dev = [
     "python-dotenv>=1.2.2",
     "bandit>=1.9.4",
     "pytest-coverage-gate>=1.0.3",
-    "flake8>=7.3.0",
-    "flake8-pyproject>=1.2.4",
-    "flake8-bandit>=4.1.1",
     "doc8>=2.0.0",
 ]
 #    "rstcheck[sphinx]>=6.2.5",
@@ -50,7 +47,7 @@ show_missing = true
 
 [tool.ruff]
 line-length = 120
-exclude = ["*.fwf"]
+exclude = ["*.fwf", "tests/assets/example01.rst"]
 force-exclude = true
 
 [tool.ruff.lint]
@@ -62,10 +59,6 @@ include = ["pyfwf"]
 
 [tool.black]
 line-length = 120
-exclude = '\\.fwf$'
-
-[tool.flake8]
-ignore = ["E203"]
-max-line-length = 127
-max-complexity = 5
-select = ["E9", "F63", "F7", "F82", "S"]
+    exclude = '''
+    (\\.fwf$|tests/assets/example01\\.rst)
+    '''

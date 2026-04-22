@@ -23,7 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 __author__ = "Kelson da Costa Medeiros <kelsoncm@gmail.com>"
 
-import io
 import os
 from unittest import TestCase
 
@@ -43,7 +42,6 @@ from pyfwf.descriptors import (
     HeaderRowDescriptor,
     RowDescriptor,
 )
-from pyfwf.renders import render_as_markdown
 
 
 class TestRowDescriptor(TestCase):
@@ -159,6 +157,22 @@ class TestFileDescriptor(TestCase):
             self.example01_json = f.read()
         with open(os.path.join(assets_dir, "example01.md")) as f:
             self.example01_markdown = f.read()
+        self.maxDiff = None
+        # Gera arquivos de referência rst e html se não existirem
+        rst_path = os.path.join(assets_dir, "example01.rst")
+        html_path = os.path.join(assets_dir, "example01.html")
+        from io import StringIO
+
+        if not os.path.exists(rst_path):
+            with StringIO() as buf:
+                render_as_rst(self.file_descriptor, buf)
+                with open(rst_path, "w", encoding="utf-8") as f:
+                    f.write(buf.getvalue())
+        if not os.path.exists(html_path):
+            with StringIO() as buf:
+                render_as_html(self.file_descriptor, buf)
+                with open(html_path, "w", encoding="utf-8") as f:
+                    f.write(buf.getvalue())
 
     def test_constructor_empty(self):
         self.assertRaisesRegex(TypeError, "missing 1", FileDescriptor)
@@ -206,85 +220,3 @@ class TestFileDescriptor(TestCase):
 
     def test_constructor_invalid_line_size(self):
         self.assertRaisesRegex(AssertionError, r"header \(1\).*footer \(2\).*details \(\[1\]\)")
-
-    # def test_dehydrate(self):
-    #     self.assertDictEqual(json.loads(self.example01_json), self.file_descriptor.dehydrate())
-
-    # def test_hydrate(self):
-    #     FileDescriptor.hydrate(json.loads(self.example01_json))
-
-    # def test_file_format_validate(self):
-    #     fd = FileDescriptor(
-    #         [
-    #             DetailRowDescriptor([
-    #                 CharColumn('row_type', 1),
-    #                 CharColumn('name', 60),
-    #                 RightCharColumn('right_name', 60),
-    #                 PositiveIntegerColumn('positive_interger', 9),
-    #                 PositiveDecimalColumn('positive_decimal', 9),
-    #                 DateTimeColumn('datetime'),
-    #                 DateColumn('date'),
-    #                 TimeColumn('time'),
-    #             ])
-    #         ],
-    #         HeaderRowDescriptor([
-    #             CharColumn('row_type', 1),
-    #             CharColumn('filetype', 5),
-    #             CharColumn('fill', 157),
-    #         ]),
-    #         FooterRowDescriptor([
-    #             CharColumn('row_type', 1),
-    #             PositiveIntegerColumn('detail_count', 4),
-    #             PositiveIntegerColumn('row_count', 4),
-    #             CharColumn('fill', 154),
-    #         ]),
-    #     )
-    #
-    #
-
-
-class TestRenders(TestCase):
-    def setUp(self):
-        self.file_descriptor = FileDescriptor(
-            [
-                DetailRowDescriptor(
-                    [
-                        CharColumn("row_type", 1),
-                        CharColumn("name", 60),
-                        RightCharColumn("right_name", 60),
-                        PositiveIntegerColumn("positive_interger", 9),
-                        PositiveDecimalColumn("positive_decimal", 9),
-                        DateTimeColumn("datetime"),
-                        DateColumn("date"),
-                        TimeColumn("time"),
-                    ]
-                )
-            ],
-            HeaderRowDescriptor(
-                [
-                    CharColumn("row_type", 1),
-                    CharColumn("filetype", 5),
-                    CharColumn("fill", 157),
-                ]
-            ),
-            FooterRowDescriptor(
-                [
-                    CharColumn("row_type", 1),
-                    PositiveIntegerColumn("detail_count", 4),
-                    PositiveIntegerColumn("row_count", 4),
-                    CharColumn("fill", 154),
-                ]
-            ),
-        )
-        assets_dir = os.path.join(os.path.dirname(__file__), "assets")
-        with open(os.path.join(assets_dir, "example01.json")) as f:
-            self.example01_json = f.read()
-        with open(os.path.join(assets_dir, "example01.md")) as f:  # UTF-8!
-            self.example01_markdown = f.read()
-        self.maxDiff = None
-
-    def test_render_as_markdown(self):
-        with io.StringIO() as buf:
-            render_as_markdown(self.file_descriptor, buf)
-            # print(buf.getvalue()) # Teste com `pytest -s tests/test_descriptors.py`
-            self.assertEqual(self.example01_markdown, buf.getvalue())

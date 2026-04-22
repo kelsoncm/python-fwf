@@ -85,3 +85,72 @@ def render_as_markdown(file_descriptor: FileDescriptor, out: StringIO):
 
     if file_descriptor.footer:
         table("FOOTER", file_descriptor.footer.columns, False)
+
+
+def render_as_rst(file_descriptor: FileDescriptor, out: StringIO):
+    def table(title, cols, trailling=True):
+        # Calcula o tamanho máximo de cada coluna
+        headers = ["#", "Column", "Size", "Start", "End", "Type", "Description"]
+        rows = [
+            [str(idx), col.name, str(col.size), str(col.start), str(col.end), col.__class__.__name__, col.description]
+            for idx, col in enumerate(cols, 1)
+        ]
+        all_rows = [headers] + rows
+        col_widths = [max(len(str(row[i])) for row in all_rows) for i in range(len(headers))]
+
+        def sep():
+            return " ".join(["=" * w for w in col_widths]) + "\n"
+
+        out.write(f"{title}\n")
+        out.write(sep())
+        out.write(" ".join([h.ljust(col_widths[i]) for i, h in enumerate(headers)]) + "\n")
+        out.write(sep())
+        for row in rows:
+            out.write(" ".join([str(cell).ljust(col_widths[i]) for i, cell in enumerate(row)]) + "\n")
+        out.write(sep())
+        if trailling:
+            out.write("\n")
+
+    out.write("File Description\n===============\n\n")
+    if file_descriptor.header:
+        table("HEADER", file_descriptor.header.columns)
+    detail_num = 1
+    for detail in file_descriptor.details:
+        table(f"DETAILS {detail_num}", detail.columns)
+        detail_num += 1
+    if file_descriptor.footer:
+        table("FOOTER", file_descriptor.footer.columns, False)
+
+
+def render_as_html(file_descriptor: FileDescriptor, out: StringIO):
+    def table(title, cols, trailling=True):
+        out.write(f"<h2>{title}</h2>\n")
+        out.write('<table border="1">\n')
+        out.write(
+            "<tr><th>#</th><th>Column</th><th>Size</th><th>Start</th><th>End</th><th>Type</th><th>Description</th></tr>\n"
+        )
+        for idx, col in enumerate(cols, 1):
+            out.write(
+                f"<tr>"
+                f"<td>{idx}</td>"
+                f"<td>{col.name}</td>"
+                f"<td>{col.size}</td>"
+                f"<td>{col.start}</td>"
+                f"<td>{col.end}</td>"
+                f"<td>{col.__class__.__name__}</td>"
+                f"<td>{col.description}</td>"
+                f"</tr>\n"
+            )
+        out.write("</table>\n")
+        if trailling:
+            out.write("<br/>\n")
+
+    out.write("<h1>Description</h1>\n")
+    if file_descriptor.header:
+        table("HEADER", file_descriptor.header.columns)
+    detail_num = 1
+    for detail in file_descriptor.details:
+        table(f"DETAILS {detail_num}", detail.columns)
+        detail_num += 1
+    if file_descriptor.footer:
+        table("FOOTER", file_descriptor.footer.columns, False)
