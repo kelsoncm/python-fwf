@@ -3,15 +3,19 @@ Home
 
 Python library for reading and manipulating **fixed-width files (FWF)**.
 
-.. |Tests Badge| image:: https://github.com/kelsoncm/python-fwf/actions/workflows/test.yml/badge.svg
-   :target: https://github.com/kelsoncm/python-fwf/actions/workflows/test.yml
+.. image:: https://img.shields.io/badge/GitHub-Repository-blue?logo=github
+   :target: https://github.com/kelsoncm/python-pyfwf
+   :alt: GitHub Repository
+
+.. image:: https://github.com/kelsoncm/python-pyfwf/actions/workflows/test.yml/badge.svg
+   :target: https://github.com/kelsoncm/python-pyfwf/actions/workflows/test.yml
    :alt: Test status
 
-.. |Coverage Badge| image:: https://codecov.io/gh/kelsoncm/python-fwf/branch/main/graph/badge.svg
-   :target: https://codecov.io/gh/kelsoncm/python-fwf
+.. image:: https://codecov.io/gh/kelsoncm/python-pyfwf/branch/main/graph/badge.svg
+   :target: https://codecov.io/gh/kelsoncm/python-pyfwf
    :alt: Test coverage
 
-.. |PyPI Badge| image:: https://badge.fury.io/py/pyfwf.svg
+.. image:: https://badge.fury.io/py/pyfwf.svg
    :target: https://badge.fury.io/py/pyfwf
    :alt: PyPI version
 
@@ -75,7 +79,7 @@ Next steps
 ----------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    index
    getting-started
