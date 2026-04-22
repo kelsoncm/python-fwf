@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyfwf"
-version = "1.0.3"
+version = "1.0.4"
 description = "Python library to manipulate fixed width file (FWF)"
 readme = "README.md"
 license = { file = "LICENSE.md" }
@@ -24,16 +24,15 @@ classifiers = [
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=9.0.3",
-    "pytest-cov>=7.1.0",
-    "responses>=0.26.0",
+    "pre-commit>=4.6.0",
     "black>=26.3.1",
     "ruff>=0.15.11",
-    "pre-commit>=4.6.0",
-    "python-dotenv>=1.2.2",
-    "bandit>=1.9.4",
-    "pytest-coverage-gate>=1.0.3",
     "doc8>=2.0.0",
+    "pytest>=9.0.3",
+    "pytest-cov>=7.1.0",
+    "python-dotenv>=1.2.2",
+    "pytest-coverage-gate>=1.0.3",
+    "responses>=0.26.0",
 ]
 #    "rstcheck[sphinx]>=6.2.5",
 

@@ -101,7 +101,7 @@ def render_as_rst(file_descriptor: FileDescriptor, out: StringIO):
         def sep():
             return " ".join(["=" * w for w in col_widths]) + "\n"
 
-        out.write(f"{title}\n")
+        out.write(f"{title}\n--------------------\n\n")
         out.write(sep())
         out.write(" ".join([h.ljust(col_widths[i]) for i, h in enumerate(headers)]) + "\n")
         out.write(sep())

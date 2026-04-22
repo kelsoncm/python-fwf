@@ -23,7 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 __author__ = "Kelson da Costa Medeiros <kelsoncm@gmail.com>"
 
-import os
 from unittest import TestCase
 
 from pyfwf.columns import (
@@ -152,27 +151,6 @@ class TestFileDescriptor(TestCase):
                 ]
             ),
         )
-        assets_dir = os.path.join(os.path.dirname(__file__), "assets")
-        with open(os.path.join(assets_dir, "example01.json")) as f:
-            self.example01_json = f.read()
-        with open(os.path.join(assets_dir, "example01.md")) as f:
-            self.example01_markdown = f.read()
-        self.maxDiff = None
-        # Gera arquivos de referência rst e html se não existirem
-        rst_path = os.path.join(assets_dir, "example01.rst")
-        html_path = os.path.join(assets_dir, "example01.html")
-        from io import StringIO
-
-        if not os.path.exists(rst_path):
-            with StringIO() as buf:
-                render_as_rst(self.file_descriptor, buf)
-                with open(rst_path, "w", encoding="utf-8") as f:
-                    f.write(buf.getvalue())
-        if not os.path.exists(html_path):
-            with StringIO() as buf:
-                render_as_html(self.file_descriptor, buf)
-                with open(html_path, "w", encoding="utf-8") as f:
-                    f.write(buf.getvalue())
 
     def test_constructor_empty(self):
         self.assertRaisesRegex(TypeError, "missing 1", FileDescriptor)
