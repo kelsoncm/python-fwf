@@ -36,7 +36,7 @@ jobs:
           black . --check
 
       - name: Run Bandit SAST
-        run: bandit -c pyproject.toml -r sc4py
+        run: bandit -c pyproject.toml -r pyfwf
 
       - name: Lint Markdown
         uses: DavidAnson/markdownlint-cli2-action@v20
@@ -74,14 +74,14 @@ jobs:
       - name: Install project dependencies
         run: pip install -e .
 
-      - name: sc4py - Lint with flake8
+      - name: pyfwf - Lint with flake8
         run: |
-          flake8 sc4py --count --select=E9,F63,F7,F82,S --show-source --statistics
-          flake8 sc4py --count --max-complexity=10 --max-line-length=127 --statistics
+          flake8 pyfwf --count --select=E9,F63,F7,F82,S --show-source --statistics
+          flake8 pyfwf --count --max-complexity=10 --max-line-length=127 --statistics
 
-      - name: sc4py - Test with coverage
+      - name: pyfwf - Test with coverage
         run: |
-          pytest --cov=sc4py --cov-report=xml:coverage.xml --cov-report=term-missing
+          pytest --cov=pyfwf --cov-report=xml:coverage.xml --cov-report=term-missing
           pytest-coverage-gate --coverage-xml=coverage.xml --baseline=.coverage-baseline
 
       - name: Upload coverage artifacts
@@ -91,11 +91,11 @@ jobs:
           path: coverage.xml
           if-no-files-found: error
 
-      - name: Upload sc4py coverage to Codecov
+      - name: Upload pyfwf coverage to Codecov
         if: github.event_name == 'push' || github.event_name == 'schedule'
         uses: codecov/codecov-action@v5
         with:
           use_oidc: true
           files: coverage.xml
-          flags: sc4py,py${{ matrix.python-version }}
+          flags: pyfwf,py${{ matrix.python-version }}
           fail_ci_if_error: false
