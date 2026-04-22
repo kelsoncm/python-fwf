@@ -5,7 +5,7 @@ import sys
 # Para conseguir fazer autodoc de pyfwf
 sys.path.insert(0, os.path.abspath(".."))
 
-project = "python-pyfwf"
+project = "pyfwf"
 
 extensions = [
     "sphinx.ext.autodoc",
