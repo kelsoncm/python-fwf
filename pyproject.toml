@@ -54,4 +54,5 @@ where = ["."]
 include = ["pyfwf"]
 
 [tool.black]
+line-length = 120
 exclude = '\\.fwf$'
