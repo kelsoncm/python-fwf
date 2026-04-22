@@ -46,7 +46,7 @@ repos:
       - id: pytest-coverage-gate
         name: pytest-coverage-gate
         stages: [pre-push]
-        entry: bash -c 'pytest-coverage-gate --coverage-xml=coverage.xml --baseline=.coverage-baseline'
+        entry: bash -c 'python -m pytest_coverage_gate --coverage-xml=coverage.xml --baseline=.coverage-baseline'
         language: system
         pass_filenames: false
         always_run: true
