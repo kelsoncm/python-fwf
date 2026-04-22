@@ -75,8 +75,8 @@ with open('data.fwf', 'r') as f:
 ## Next steps
 
 - [Getting Started](getting-started) — step-by-step walkthrough
-- [API Reference — Columns](api/columns) — all column types explained
-- [API Reference — Descriptors](api/descriptors) — `FileDescriptor`, `RowDescriptor`
-- [API Reference — Reader](api/readers) — reading FWF files
-- [API Reference — Renders](api/renders) — generating Markdown tables
-- [API Reference — Hydrating](api/hydrating) — JSON serialisation
+- [API Reference — Columns](api-columns) — all column types explained
+- [API Reference — Descriptors](api-descriptors) — `FileDescriptor`, `RowDescriptor`
+- [API Reference — Reader](api-readers) — reading FWF files
+- [API Reference — Renders](api-renders) — generating Markdown tables
+- [API Reference — Hydrating](api-hydrating) — JSON serialisation
