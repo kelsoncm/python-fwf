@@ -35,6 +35,7 @@ jobs:
 
       - name: Build docs
         run: |
+          python -m sphinx.ext.apidoc -f -e -o docs pyfwf
           sphinx-build -b html docs docs/_build/html
 
       - name: Upload Pages artifact
