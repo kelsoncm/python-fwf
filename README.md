@@ -1,13 +1,17 @@
 # Python FWF
 
+[![License](https://img.shields.io/badge/License-MIT-lemon.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/pypi/pyversions/pyfwf.svg)](https://pypi.org/project/pyfwf/)
-[![PyPI Deploy](https://github.com/kelsoncm/python-pyfwf/actions/workflows/publish.yml/badge.svg)](https://github.com/kelsoncm/python-pyfwf/actions/workflows/publish.yml)
-[![Tests](https://github.com/kelsoncm/python-pyfwf/actions/workflows/qa.yml/badge.svg)](https://github.com/kelsoncm/python-pyfwf/actions/workflows/qa.yml)
+[![QA](https://github.com/kelsoncm/python-pyfwf/actions/workflows/qa.yml/badge.svg)](https://github.com/kelsoncm/python-pyfwf/actions/workflows/qa.yml)
 [![Coverage](https://codecov.io/gh/kelsoncm/python-pyfwf/branch/main/graph/badge.svg)](https://codecov.io/gh/kelsoncm/python-pyfwf)
-[![License: MIT](https://img.shields.io/badge/License-MIT-lemon.svg)](https://opensource.org/licenses/MIT)
+[![Publish](https://github.com/kelsoncm/python-pyfwf/actions/workflows/publish.yml/badge.svg)](https://github.com/kelsoncm/python-pyfwf/actions/workflows/publish.yml)
+[![Docs](https://github.com/kelsoncm/python-pyfwf/actions/workflows/docs.yml/badge.svg)](https://kelsoncm.github.io/python-pyfwf/)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 
 Python library for reading and manipulating **fixed width files (FWF)**.
+
+> See each package's [documentation](https://kelsoncm.github.io/python-pyfwf/)
+> for details and usage examples.
 
 This library is necessary because large banks and the Brazilian government use a
 batch file model that has 3 data blocks:
@@ -47,8 +51,6 @@ having **file**, **header**, **detail**, and **footer** descriptors.
 - **petl-fwf** integrates FWF reading into the petl ecosystem, useful for ETL,
   but without a focus on type validation or detailed file structure.
 
-See each package's documentation for details and usage examples.
-
 ## Features
 
 - 📖 Read fixed-width format files with custom column definitions
@@ -86,23 +88,9 @@ with open('data.fwf', 'r') as f:
         print(row)
 ```
 
-## Supported Column Types
+## Security
 
-- `CharColumn` - Text data
-- `RightCharColumn` - Right-aligned text
-- `PositiveIntegerColumn` - Positive integers
-- `PositiveDecimalColumn` - Decimal numbers
-- `DateColumn` - Date values
-- `TimeColumn` - Time values
-- `DateTimeColumn` - DateTime values
-
-## Documentation
-
-See [docs/](docs/) for detailed documentation and examples.
-
-## License
-
-MIT License © 2015 Umbrella Tech
+Please report vulnerabilities according to [SECURITY.md](SECURITY.md).
 
 ## Author
 
