@@ -127,4 +127,6 @@ Next steps
 .. toctree::
    :maxdepth: 1
 
+   getting-started
+   contribute
    pyfwf
