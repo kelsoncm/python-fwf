@@ -26,6 +26,34 @@ A fixed-width file (FWF) is a plain-text file where each field occupies a
 predetermined number of characters in every line. Unlike CSV, there are
 no delimiters — position and length define each column.
 
+This library is necessary because large banks and the Brazilian government use a
+batch file model that has 3 data blocks:
+
+1. The **header** line identifies the file type, does not describe the file
+   structure, and usually starts the line with the number 1 to indicate it
+   is the header.
+2. The **detail** contains the data and may have more than one type of detail.
+   For example, if it starts with 2 it represents a state, if it starts with
+   3 it represents a municipality of the state that came before it, and each
+   type of detail has its own data structure.
+3. The **footer** line signs the file, that is, it may have a line counter
+   field or another field to validate if the file is complete, and usually
+   starts the line with the number 9 to indicate it is the footer.
+
+Thus, this library uses descriptors to define how the data should be read,
+having **file**, **header**, **detail**, and **footer** descriptors.
+
+Compare with others packages
+----------------------------
+
+- **pyfwf** offers an object-oriented API, support for typed columns
+  (int, decimal, date, etc.), header/footer definition, and full test coverage.
+  Ideal for scenarios that require validation and strict data structure.
+- **fwf** and **microtrade-fwf** are simpler solutions, with fewer validation
+  and configuration options, aimed at quick and basic usage.
+- **petl-fwf** integrates FWF reading into the petl ecosystem, useful for ETL,
+  but without a focus on type validation or detailed file structure.
+
 .. code-block::none
     HDR SALES_REPORT                                   20240101
     D   Alice Smith                                    000001250
