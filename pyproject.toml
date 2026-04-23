@@ -8,12 +8,13 @@ version = "1.0.1"
 description = "Python library to manipulate fixed width file (FWF)"
 readme = "README.md"
 license = { file = "LICENSE.md" }
-authors = [{ name = "kelsoncm" }]
+authors = [{ name = "Kelson da Costa Medeiros", email = "kelsoncm@gmail.com" }]
 requires-python = ">=3.10"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -34,7 +35,16 @@ dev = [
     "pytest-coverage-gate>=1.0.3",
     "responses>=0.26.0",
 ]
-#    "rstcheck[sphinx]>=6.2.5",
+
+[project.urls]
+Homepage = "https://github.com/kelsoncm/python-pyfwf"
+"Bug Tracker" = "https://github.com/kelsoncm/python-pyfwf/issues"
+Download = "https://github.com/kelsoncm/python-pyfwf/releases/"
+Docs = "https://kelsoncm.github.io/python-pyfwf/"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pyfwf"]
 
 [tool.coverage.run]
 source = ["pyfwf"]
@@ -52,9 +62,6 @@ force-exclude = true
 [tool.ruff.lint]
 select = ["E", "F", "W", "I"]
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["pyfwf"]
 
 [tool.black]
 line-length = 120
