@@ -118,9 +118,6 @@ Quick example
             print(row)
     # {'name': 'Alice Smith', 'age': 30, 'salary': 3500.00}
 
-
-
-
 Next steps
 ----------
 

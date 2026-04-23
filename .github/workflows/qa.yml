@@ -77,7 +77,7 @@ jobs:
         run: pip install -e .
 
 
-      - name: pyfwf - Test with coverage
+      - name: Test with coverage
         run: |
           pytest --cov=pyfwf --cov-report=xml:coverage.xml --cov-report=term-missing
           pytest-coverage-gate --coverage-xml=coverage.xml --baseline=.coverage-baseline
@@ -89,11 +89,11 @@ jobs:
           path: coverage.xml
           if-no-files-found: error
 
-      - name: Upload pyfwf coverage to Codecov
+      - name: Upload coverage to Codecov
         if: github.event_name == 'push' || github.event_name == 'schedule'
         uses: codecov/codecov-action@v6
         with:
           use_oidc: true
           files: coverage.xml
-          flags: pyfwf,py${{ matrix.python-version }}
+          flags: py${{ matrix.python-version }}
           fail_ci_if_error: false
