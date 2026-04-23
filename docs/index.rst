@@ -119,17 +119,12 @@ Quick example
     # {'name': 'Alice Smith', 'age': 30, 'salary': 3500.00}
 
 
+
+
 Next steps
 ----------
 
 .. toctree::
    :maxdepth: 1
 
-   index
-   getting-started
-   api-descriptors
-   api-columns
-   api-readers
-   api-renders
-   api-hydrating
-   contribute
+   pyfwf
