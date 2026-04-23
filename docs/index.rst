@@ -7,17 +7,33 @@ Python library for reading and manipulating **fixed-width files (FWF)**.
    :target: https://github.com/kelsoncm/python-pyfwf
    :alt: GitHub Repository
 
+.. image:: https://img.shields.io/badge/License-MIT-lemon.svg
+   :target: https://opensource.org/licenses/MIT
+   :alt: License
+
+.. image:: https://img.shields.io/pypi/pyversions/pyfwf.svg
+   :target: https://pypi.org/project/pyfwf/
+   :alt: Python
+
 .. image:: https://github.com/kelsoncm/python-pyfwf/actions/workflows/qa.yml/badge.svg
    :target: https://github.com/kelsoncm/python-pyfwf/actions/workflows/qa.yml
-   :alt: Test status
+   :alt: QA
 
 .. image:: https://codecov.io/gh/kelsoncm/python-pyfwf/branch/main/graph/badge.svg
    :target: https://codecov.io/gh/kelsoncm/python-pyfwf
-   :alt: Test coverage
+   :alt: Coverage
 
-.. image:: https://badge.fury.io/py/pyfwf.svg
-   :target: https://badge.fury.io/py/pyfwf
-   :alt: PyPI version
+.. image:: https://github.com/kelsoncm/python-pyfwf/actions/workflows/publish.yml/badge.svg
+   :target: https://github.com/kelsoncm/python-pyfwf/actions/workflows/publish.yml
+   :alt: Publish
+
+.. image:: https://github.com/kelsoncm/python-pyfwf/actions/workflows/docs.yml/badge.svg
+   :target: https://kelsoncm.github.io/python-pyfwf/
+   :alt: Docs
+
+.. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit
+   :target: https://github.com/pre-commit/pre-commit
+   :alt: pre-commit
 
 What is a fixed-width file?
 ---------------------------
