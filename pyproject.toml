@@ -67,6 +67,6 @@ select = ["E", "F", "W", "I", "S"]
 
 [tool.black]
 line-length = 120
-    exclude = '''
+exclude = '''
     (\\.fwf$)
     '''
